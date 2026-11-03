@@ -1,5 +1,6 @@
 <?php
 
+use App\Exceptions\ResourceNotFoundException;
 use App\Http\Middleware\HandleAppearance;
 use App\Http\Middleware\HandleInertiaRequests;
 use Illuminate\Foundation\Application;
@@ -7,6 +8,7 @@ use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Middleware\AddLinkHeadersForPreloadedAssets;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -27,4 +29,13 @@ return Application::configure(basePath: dirname(__DIR__))
         $exceptions->shouldRenderJsonWhen(
             fn (Request $request) => $request->is('api/*') || $request->expectsJson(),
         );
+        $exceptions->render(function (ResourceNotFoundException $e, Request $request) {
+            if($request->header('X-Inertia')){
+                Inertia::flash('toast', ['type' => 'error', 'message' => $e->getMessage()]);
+
+                return back();
+            }
+
+            return response()->json(['message' => $e->getMessage()], 404);
+        });
     })->create();
