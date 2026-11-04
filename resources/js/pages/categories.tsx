@@ -1,4 +1,4 @@
-import {Head, router, usePage} from "@inertiajs/react";
+import {Head} from "@inertiajs/react";
 import {categories} from "@/routes";
 import {Button} from "@/components/ui/button";
 import {Filter, Plus} from "lucide-react";
@@ -6,15 +6,7 @@ import {useState} from "react";
 import {Category} from "@/types/category";
 import {CategoryDialogForm} from "@/components/categories/dialog-form";
 import {PaginatedData} from "@/types/pagination";
-import {
-    PaginationContent,
-    PaginationItem,
-    PaginationLink,
-    PaginationNext,
-    PaginationPrevious
-} from "@/components/ui/pagination";
 import {CategoryTable} from "@/components/categories/table";
-import {Pagination} from "@/components/pagination";
 import {CategoryFilterModal} from "@/components/categories/filter-modal";
 
 interface Props {
