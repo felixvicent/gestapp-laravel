@@ -6,8 +6,8 @@ import {Input} from "@/components/ui/input";
 import InputError from "@/components/input-error";
 import {Textarea} from "@/components/ui/textarea";
 import {Button} from "@/components/ui/button";
-import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
 import {CategoryType} from "@/types/category-type";
+import {Select} from "@/components/_general/select";
 
 interface Props {
     category?: Category | null,
@@ -65,16 +65,7 @@ export function CategoryForm({category, onCancel}: Props) {
                     <div className="grid gap-2">
                         <Label htmlFor="type">Tipo</Label>
 
-                        <Select name="type" defaultValue={category?.type}>
-                            <SelectTrigger className="mt-1 w-full">
-                                <SelectValue placeholder="Selecione o tipo" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                {types.map(type => (
-                                    <SelectItem value={type.value}>{type.label}</SelectItem>
-                                ))}
-                            </SelectContent>
-                        </Select>
+                        <Select name="type" value={category?.type} options={types.map(type => ({ label: type.label, value: type.value }))} />
 
                         <InputError className="mt-2" message={errors.type} />
                     </div>

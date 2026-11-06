@@ -1,12 +1,12 @@
 import {Dialog, DialogContent} from "@/components/ui/dialog";
 import {Label} from "@/components/ui/label";
 import {Input} from "@/components/ui/input";
-import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
 import {Button} from "@/components/ui/button";
 import {Form, router, usePage} from "@inertiajs/react";
 import {CategoryType} from "@/types/category-type";
 import React from "react";
 import {index} from "@/actions/App/Http/Controllers/CategoryController";
+import {Select} from "@/components/_general/select";
 
 interface Props {
     isOpen: boolean;
@@ -52,17 +52,11 @@ export function CategoryFilterModal({isOpen, onCloseModal}: Props){
                                 <div className="grid gap-2">
                                     <Label htmlFor="type">Tipo</Label>
 
-                                    <Select name="type" defaultValue={filters?.type ?? 'ALL'}>
-                                        <SelectTrigger className="mt-1 w-full">
-                                            <SelectValue placeholder="Selecione o tipo" />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            <SelectItem value="ALL">Todos</SelectItem>
-                                            {types.map(type => (
-                                                <SelectItem value={type.value}>{type.label}</SelectItem>
-                                            ))}
-                                        </SelectContent>
-                                    </Select>
+                                    <Select
+                                        name="type"
+                                        value={filters?.type ?? 'ALL'}
+                                        options={types.map(type => ({ value: type.value, label: type.label }))}
+                                    />
                                 </div>
                                 <div className="flex items-center gap-4 justify-end">
                                     <Button

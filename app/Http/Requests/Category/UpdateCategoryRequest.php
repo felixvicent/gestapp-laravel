@@ -2,8 +2,10 @@
 
 namespace App\Http\Requests\Category;
 
+use App\Enums\CategoryType;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UpdateCategoryRequest extends FormRequest
 {
@@ -25,6 +27,7 @@ class UpdateCategoryRequest extends FormRequest
         return [
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
+            'type' => ['required', Rule::enum(CategoryType::class)],
         ];
     }
 
@@ -32,6 +35,8 @@ class UpdateCategoryRequest extends FormRequest
     {
         return [
             'name.required' => 'O nome da categoria é obrigatório.',
+            'type.required' => 'O tipo da categoria é obrigatório.',
+            'type.enum' => 'O tipo da categoria é inválido',
         ];
     }
 }

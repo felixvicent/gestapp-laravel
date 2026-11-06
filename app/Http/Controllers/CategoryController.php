@@ -18,8 +18,10 @@ class CategoryController extends Controller
     public function index(Request $request): Response
     {
         $filters = $request->only(['search', 'type']);
+
         return Inertia::render('categories', [
             'categories' => $this->categoryService->getCategories($request->user(), $filters),
+            'filters' => $filters,
             'types' => collect(CategoryType::cases())
                 ->map(fn ($type) => [
                     'value' => $type->value,

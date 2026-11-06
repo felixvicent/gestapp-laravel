@@ -2,8 +2,6 @@ import {Dialog, DialogContent} from "@/components/ui/dialog";
 import Heading from "@/components/heading";
 import {Category} from "@/types/category";
 import {CategoryForm} from "@/components/categories/form";
-import {CategoryType} from "@/types/category-type";
-import {usePage} from "@inertiajs/react";
 
 interface Props {
     isOpen: boolean,
