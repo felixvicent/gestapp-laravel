@@ -1,7 +1,8 @@
 <?php
 
-namespace App\DTOs;
+namespace App\DTOs\Transactions;
 
+use App\DTOs\CategoryDTO;
 use App\Models\Transaction;
 
 class TransactionDTO

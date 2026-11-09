@@ -8,6 +8,7 @@ import {Category} from "@/types/category";
 import {MultiSelect} from "@/components/_general/multi-select";
 import {index} from "@/actions/App/Http/Controllers/TransactionController";
 import {Select} from "@/components/_general/select";
+import InputError from "@/components/input-error";
 
 interface Props {
     isOpen: boolean;
@@ -42,7 +43,7 @@ const PERIOD_OPTIONS = [
 ];
 
 export function TransactionFilterModal({isOpen, onCloseModal}: Props){
-    const { filters, categories } = usePage<{ filters?: CategoryFilters, categories: Category[] }>().props;
+    const { filters, categories, errors } = usePage<{ filters?: CategoryFilters, categories: Category[] }>().props;
 
     return (
         <Dialog open={isOpen} onOpenChange={onCloseModal}>
@@ -71,24 +72,45 @@ export function TransactionFilterModal({isOpen, onCloseModal}: Props){
                                         placeholder="Nome da transação"
                                         defaultValue={filters?.search ?? ''}
                                     />
+
+                                    <InputError
+                                        className="mt-2"
+                                        message={errors.search}
+                                    />
                                 </div>
                                 <div className="grid gap-2">
                                     <Label htmlFor="minValue">Valor</Label>
                                     <div className="flex gap-2">
-                                        <Input
-                                            id="minValue"
-                                            className="mt-1 block w-full"
-                                            name="minValue"
-                                            placeholder="Valor minimo"
-                                            defaultValue={filters?.minValue ?? ''}
-                                        />
+                                        <div>
+                                            <Input
+                                                id="minValue"
+                                                className="mt-1 block w-full"
+                                                name="minValue"
+                                                placeholder="Valor minimo"
+                                                defaultValue={filters?.minValue ?? ''}
+                                                type="number"
+                                                step="0.01"
+                                            />
+                                            <InputError
+                                                className="mt-2"
+                                                message={errors.minValue}
+                                            />
+                                        </div>
+                                        <div>
                                         <Input
                                             id="maxValue"
                                             className="mt-1 block w-full"
                                             name="maxValue"
                                             placeholder="Valor máximo"
                                             defaultValue={filters?.maxValue ?? ''}
+                                            type="number"
+                                            step="0.01"
                                         />
+                                            <InputError
+                                                className="mt-2"
+                                                message={errors.maxValue}
+                                            />
+                                        </div>
                                     </div>
                                 </div>
                                 <div className="grid gap-2">
@@ -110,7 +132,7 @@ export function TransactionFilterModal({isOpen, onCloseModal}: Props){
                                         name="period"
                                         placeholder="Nome da transação"
                                         options={PERIOD_OPTIONS}
-                                        value={filters?.period ?? 'last_10_days'}
+                                        value={filters?.period ?? 'CURRENT_MONTH'}
                                     />
                                 </div>
                                 <div className="flex items-center gap-4 justify-end">

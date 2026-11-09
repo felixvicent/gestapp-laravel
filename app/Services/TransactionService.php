@@ -2,7 +2,8 @@
 
 namespace App\Services;
 
-use App\DTOs\TransactionDTO;
+use App\DTOs\Transactions\TransactionDTO;
+use App\DTOs\Transactions\TransactionFilterDTO;
 use App\Exceptions\ResourceNotFoundException;
 use App\Models\Transaction;
 use App\Models\User;
@@ -20,22 +21,22 @@ class TransactionService
             ?? throw new ResourceNotFoundException('Transação não encontrada!');
     }
 
-    public function getTransactions(User $user, array $filters = []): LengthAwarePaginator
+    public function getTransactions(User $user, TransactionFilterDTO $filters): LengthAwarePaginator
     {
         return $user->transactions()
-            ->when($filters['search'] ?? null, function ($query, $search) {
+            ->when($filters->search ?? null, function ($query, $search) {
                 $query->where('title', 'like', "%{$search}%");
             })
-            ->when($filters['minValue'] ?? null, function ($query, $minValue) {
+            ->when($filters->minValue ?? null, function ($query, $minValue) {
                 $query->where('value', '>=', max($minValue, 0));
             })
-            ->when($filters['maxValue'] ?? null, function ($query, $maxValue) {
+            ->when($filters->maxValue ?? null, function ($query, $maxValue) {
                 $query->where('value', '<=', $maxValue);
             })
-            ->when($filters['categories'] ?? null, function ($query, $categories) {
+            ->when($filters->categories ?? null, function ($query, $categories) {
                 $query->whereIn('category_id', $categories);
             })
-            ->when($filters['period'] ?? null, function ($query, $period) {
+            ->when($filters->period ?? null, function ($query, $period) {
                 $query->whereBetween('date', $this->getPeriod($period));
             })
             ->with('category')

@@ -65,12 +65,20 @@ export function MultiSelect({
                     role="combobox"
                     aria-expanded={isOpen}
                     disabled={disabled}
-                    className={cn("w-full justify-between font-normal h-auto", className)}
+                    className={cn("w-full justify-between font-normal h-auto hover:bg-neutral-900", className)}
                 >
                     {selected.length > 0 ? (
                         <div className="flex flex-wrap gap-1">
                             {selectedOptions.map(option => (
-                                <Button size="sm" className="text-xs h-6 bg-neutral-900 text-white">{option.label} <X className="size-3" /></Button>
+                                <Button
+                                    size="sm"
+                                    variant="outline"
+                                    type="button"
+                                    onClick={() => toggleOption(option.value)}
+                                >
+                                    {option.label}
+                                    <X className="size-3"  />
+                                </Button>
                             ))}
                         </div>
                     ) : <span className="truncate text-muted-foreground">{placeholder}</span>}

@@ -2,20 +2,21 @@
 
 namespace App\Http\Controllers;
 
+use App\DTOs\Transactions\TransactionFilterDTO;
 use App\Exceptions\ResourceNotFoundException;
+use App\Http\Requests\Transaction\FilterTransactionRequest;
 use App\Http\Requests\Transaction\StoreTransactionRequest;
 use App\Http\Requests\Transaction\UpdateTransactionRequest;
 use App\Services\TransactionService;
-use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class TransactionController extends Controller
 {
     public function __construct(private readonly TransactionService $transactionService) {}
 
-    public function index(Request $request)
+    public function index(FilterTransactionRequest $request)
     {
-        $filters = $request->only(['search', 'maxValue', 'minValue', 'period', 'categories']);
+        $filters = TransactionFilterDTO::fromRequest($request);
 
         return Inertia::render('transactions', [
             'transactions' => $this->transactionService->getTransactions($request->user(), $filters),

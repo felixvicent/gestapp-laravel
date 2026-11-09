@@ -20,7 +20,7 @@ export function Select({value, name, placeholder = "Selecione...", options}: Pro
             </SelectTrigger>
             <SelectContent>
                 {options.map(option => (
-                    <SelectItem value={option.value}>{option.label}</SelectItem>
+                    <SelectItem key={option.value} value={option.value}>{option.label}</SelectItem>
                 ))}
             </SelectContent>
         </SelectBase>
