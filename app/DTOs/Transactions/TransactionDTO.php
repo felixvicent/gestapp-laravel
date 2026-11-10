@@ -2,7 +2,7 @@
 
 namespace App\DTOs\Transactions;
 
-use App\DTOs\CategoryDTO;
+use App\DTOs\Categories\CategoryDTO;
 use App\Models\Transaction;
 
 class TransactionDTO

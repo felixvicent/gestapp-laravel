@@ -2,6 +2,8 @@
 
 namespace App\Services;
 
+use App\DTOs\Categories\CategoryDTO;
+use App\DTOs\Categories\CategoryFilterDTO;
 use App\Exceptions\ResourceNotFoundException;
 use App\Models\Category;
 use App\Models\User;
@@ -20,17 +22,18 @@ class CategoryService
             ?? throw new ResourceNotFoundException('Categoria não encontrada!');
     }
 
-    public function getCategories(User $user, array $filters = []): LengthAwarePaginator|AbstractPaginator
+    public function getCategories(User $user, CategoryFilterDTO $filters): LengthAwarePaginator|AbstractPaginator
     {
         return $user->categories()
-            ->when($filters['search'] ?? null, function ($query, $search) {
+            ->when($filters->search ?? null, function ($query, $search) {
                 $query->where('name', 'like', '%'.$search.'%');
             })
-            ->when(isset($filters['type']) && $filters['type'] !== 'ALL', function ($query, $type) {
+            ->when(isset($filters->type) && $filters->type !== 'ALL', function ($query, $type) {
                 $query->where('type', $type);
             })
             ->latest()
             ->paginate(10)
-            ->withQueryString();
+            ->withQueryString()
+            ->through(fn (Category $category) => CategoryDTO::fromModel($category));
     }
 }

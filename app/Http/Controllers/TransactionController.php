@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\DTOs\Transactions\TransactionFilterDTO;
+use App\Enums\CategoryType;
+use App\Enums\TransactionPeriod;
 use App\Exceptions\ResourceNotFoundException;
 use App\Http\Requests\Transaction\FilterTransactionRequest;
 use App\Http\Requests\Transaction\StoreTransactionRequest;
@@ -22,6 +24,12 @@ class TransactionController extends Controller
             'transactions' => $this->transactionService->getTransactions($request->user(), $filters),
             'categories' => $request->user()->categories()->get(),
             'filters' => $filters,
+            'period' => collect(TransactionPeriod::cases())
+                ->map(fn ($type) => [
+                    'value' => $type->value,
+                    'label' => $type->label(),
+                ])
+                ->values(),
         ]);
     }
 

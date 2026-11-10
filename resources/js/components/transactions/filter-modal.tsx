@@ -9,6 +9,8 @@ import {MultiSelect} from "@/components/_general/multi-select";
 import {index} from "@/actions/App/Http/Controllers/TransactionController";
 import {Select} from "@/components/_general/select";
 import InputError from "@/components/input-error";
+import {CategoryType} from "@/types/category-type";
+import {TransactionPeriod} from "@/types/transaction-period";
 
 interface Props {
     isOpen: boolean;
@@ -23,27 +25,13 @@ interface CategoryFilters {
     period?: string;
 }
 
-const PERIOD_OPTIONS = [
-    {
-        label: 'Mês atual',
-        value: 'CURRENT_MONTH'
-    },
-    {
-        label: 'Últimos 3 meses',
-        value: 'LAST_3_MONTHS'
-    },
-    {
-        label: 'Últimos 6 meses',
-        value: 'LAST_6_MONTHS'
-    },
-    {
-        label: 'Último ano',
-        value: 'LAST_YEAR'
-    }
-];
-
 export function TransactionFilterModal({isOpen, onCloseModal}: Props){
-    const { filters, categories, errors } = usePage<{ filters?: CategoryFilters, categories: Category[] }>().props;
+    const {
+        filters,
+        categories,
+        errors,
+        period
+    } = usePage<{ filters?: CategoryFilters, categories: Category[], period: TransactionPeriod[] }>().props;
 
     return (
         <Dialog open={isOpen} onOpenChange={onCloseModal}>
@@ -131,8 +119,12 @@ export function TransactionFilterModal({isOpen, onCloseModal}: Props){
                                     <Select
                                         name="period"
                                         placeholder="Nome da transação"
-                                        options={PERIOD_OPTIONS}
+                                        options={period}
                                         value={filters?.period ?? 'CURRENT_MONTH'}
+                                    />
+                                    <InputError
+                                        className="mt-2"
+                                        message={errors.period}
                                     />
                                 </div>
                                 <div className="flex items-center gap-4 justify-end">

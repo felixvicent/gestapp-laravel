@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\DTOs\Categories\CategoryFilterDTO;
 use App\Enums\CategoryType;
 use App\Exceptions\ResourceNotFoundException;
+use App\Http\Requests\Category\FilterCategoryRequest;
 use App\Http\Requests\Category\StoreCategoryRequest;
 use App\Http\Requests\Category\UpdateCategoryRequest;
 use App\Services\CategoryService;
@@ -15,9 +17,9 @@ class CategoryController extends Controller
 {
     public function __construct(private readonly CategoryService $categoryService) {}
 
-    public function index(Request $request): Response
+    public function index(FilterCategoryRequest $request): Response
     {
-        $filters = $request->only(['search', 'type']);
+        $filters = CategoryFilterDTO::fromRequest($request);
 
         return Inertia::render('categories', [
             'categories' => $this->categoryService->getCategories($request->user(), $filters),

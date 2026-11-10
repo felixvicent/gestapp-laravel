@@ -2,8 +2,10 @@
 
 namespace App\Http\Requests\Transaction;
 
+use App\Enums\TransactionPeriod;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class FilterTransactionRequest extends FormRequest
 {
@@ -27,7 +29,7 @@ class FilterTransactionRequest extends FormRequest
             'maxValue' => 'numeric|gte:0|nullable',
             'minValue' => 'numeric|gte:0|nullable',
             'categories' => 'array',
-            'period' => 'string',
+            'period' => [Rule::enum(TransactionPeriod::class)],
         ];
     }
 }
