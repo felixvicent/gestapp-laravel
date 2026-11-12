@@ -48,7 +48,7 @@ export function TransactionsTable({transactions}: Props) {
                         <TableRow key={transaction.id}>
                             <TableCell>{transaction.id}</TableCell>
                             <TableCell>{transaction.title}</TableCell>
-                            <TableCell>{formatCurrency(transaction.value)}</TableCell>
+                            <TableCell>{formatCurrency(transaction.value, false)}</TableCell>
                             <TableCell>{formatDate(transaction.date)}</TableCell>
                             <TableCell>{transaction.category.name}</TableCell>
                             <TableCell className="text-right">

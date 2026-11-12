@@ -9,7 +9,6 @@ import {MultiSelect} from "@/components/_general/multi-select";
 import {index} from "@/actions/App/Http/Controllers/TransactionController";
 import {Select} from "@/components/_general/select";
 import InputError from "@/components/input-error";
-import {CategoryType} from "@/types/category-type";
 import {TransactionPeriod} from "@/types/transaction-period";
 
 interface Props {

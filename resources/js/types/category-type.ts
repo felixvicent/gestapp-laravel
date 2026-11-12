@@ -1,4 +1,1 @@
-export interface CategoryType {
-    value: string,
-    label: string,
-}
+export type CategoryType = 'EXPENSE' | 'REVENUE'

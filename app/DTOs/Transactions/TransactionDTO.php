@@ -7,16 +7,26 @@ use App\Models\Transaction;
 
 class TransactionDTO
 {
-    public static function fromModel(Transaction $transaction): array
+    public function __construct(
+        public int $id,
+        public string $title,
+        public float $value,
+        public ?string $description,
+        public string $date,
+        public string $created_at,
+        public CategoryDTO $category,
+    ) {}
+
+    public static function fromModel(Transaction $transaction): TransactionDTO
     {
-        return [
-            'id' => $transaction->id,
-            'title' => $transaction->title,
-            'description' => $transaction->description,
-            'value' => $transaction->value,
-            'date' => $transaction->date,
-            'created_at' => $transaction->created_at,
-            'category' => CategoryDTO::fromModel($transaction->category),
-        ];
+        return new self(
+            id: $transaction->id,
+            title: $transaction->title,
+            value: $transaction->value,
+            description: $transaction->description,
+            date: $transaction->date,
+            created_at: $transaction->created_at,
+            category: CategoryDTO::fromModel($transaction->category),
+        );
     }
 }

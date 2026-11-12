@@ -11,10 +11,11 @@ interface Props {
     name?: string;
     placeholder?: string
     options: SelectOptions[]
+    onChange?: (value: string) => void
 }
-export function Select({value, name, placeholder = "Selecione...", options}: Props) {
+export function Select({value, name, placeholder = "Selecione...", options, onChange}: Props) {
     return (
-        <SelectBase name={name} defaultValue={value}>
+        <SelectBase name={name} defaultValue={value} onValueChange={onChange}>
             <SelectTrigger className="mt-1 w-full">
                 <SelectValue placeholder={placeholder} />
             </SelectTrigger>

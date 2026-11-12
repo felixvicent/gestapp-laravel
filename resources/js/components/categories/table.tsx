@@ -8,9 +8,9 @@ import {useState} from "react";
 import {DeleteDialog} from "@/components/delete-dialog";
 import {destroy} from "@/actions/App/Http/Controllers/CategoryController";
 import {CategoryDialogForm} from "@/components/categories/dialog-form";
-import {CategoryType} from "@/types/category-type";
 import {Pagination} from "@/components/pagination";
 import {PaginatedData} from "@/types/pagination";
+import {SelectOptions} from "@/types/select-options";
 
 interface Props {
     categories: PaginatedData<Category>
@@ -20,7 +20,7 @@ export function CategoryTable({categories}: Props){
     const [selectedCategoryToDelete, setSelectedCategoryToDelete] = useState<Category | null>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
 
-    const { types } = usePage<{ types: CategoryType[] }>().props
+    const { types } = usePage<{ types: SelectOptions[] }>().props
 
     function parseCategoryType(categoryType: string){
         return types.find(type => type.value === categoryType)?.label;

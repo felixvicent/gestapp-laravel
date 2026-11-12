@@ -3,10 +3,10 @@ import {Label} from "@/components/ui/label";
 import {Input} from "@/components/ui/input";
 import {Button} from "@/components/ui/button";
 import {Form, router, usePage} from "@inertiajs/react";
-import {CategoryType} from "@/types/category-type";
 import React from "react";
 import {index} from "@/actions/App/Http/Controllers/CategoryController";
 import {Select} from "@/components/_general/select";
+import {SelectOptions} from "@/types/select-options";
 
 interface Props {
     isOpen: boolean;
@@ -19,7 +19,7 @@ interface CategoryFilters {
 }
 
 export function CategoryFilterModal({isOpen, onCloseModal}: Props){
-    const { types, filters } = usePage<{ types: CategoryType[], filters?: CategoryFilters }>().props;
+    const { types, filters } = usePage<{ types: SelectOptions[], filters?: CategoryFilters }>().props;
 
     return (
         <Dialog open={isOpen} onOpenChange={onCloseModal}>

@@ -6,8 +6,8 @@ import {Input} from "@/components/ui/input";
 import InputError from "@/components/input-error";
 import {Textarea} from "@/components/ui/textarea";
 import {Button} from "@/components/ui/button";
-import {CategoryType} from "@/types/category-type";
 import {Select} from "@/components/_general/select";
+import {SelectOptions} from "@/types/select-options";
 
 interface Props {
     category?: Category | null,
@@ -16,7 +16,7 @@ interface Props {
 export function CategoryForm({category, onCancel}: Props) {
     const isEditing = category != null;
 
-    const { types } = usePage<{ types: CategoryType[] }>().props
+    const { types } = usePage<{ types: SelectOptions[] }>().props
 
     return (
         <Form {...(isEditing ? update.form(category.id) : store.form())}

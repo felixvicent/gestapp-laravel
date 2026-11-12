@@ -9,7 +9,6 @@ use App\Http\Requests\Category\FilterCategoryRequest;
 use App\Http\Requests\Category\StoreCategoryRequest;
 use App\Http\Requests\Category\UpdateCategoryRequest;
 use App\Services\CategoryService;
-use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
