@@ -4,17 +4,22 @@ namespace App\Services;
 
 use App\DTOs\Dashboard\DashboardFilterDTO;
 use App\DTOs\Dashboard\DashboardTransactionByCategoryDTO;
+use App\DTOs\Dashboard\DashboardTransactionByTagDTO;
+use App\DTOs\Dashboard\DashboardTransactionVariationDTO;
 use App\DTOs\Transactions\TransactionDTO;
 use App\DTOs\Transactions\TransactionFilterDTO;
 use App\DTOs\Transactions\TransactionsByMonthDTO;
 use App\Enums\CategoryType;
 use App\Exceptions\ResourceNotFoundException;
+use App\Http\Requests\Transaction\StoreTransactionRequest;
+use App\Http\Requests\Transaction\UpdateTransactionRequest;
 use App\Models\Transaction;
 use App\Models\User;
-use App\DTOs\Dashboard\DashboardTransactionVariationDTO;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Throwable;
 
 class TransactionService
 {
@@ -45,7 +50,7 @@ class TransactionService
             ->when($filters->period ?? null, function ($query, $period) {
                 $query->whereBetween('date', $this->getPeriod($period));
             })
-            ->with('category')
+            ->with(['category', 'tags'])
             ->latest()
             ->paginate(10)
             ->withQueryString()
@@ -98,6 +103,59 @@ class TransactionService
             ->groupBy('categories.id')
             ->get()
             ->map(fn ($item) => DashboardTransactionByCategoryDTO::from($item));
+    }
+
+    public function getTransactionsByTags(User $user, DashboardFilterDTO $filter, CategoryType $type): Collection|\Illuminate\Support\Collection
+    {
+        return $user->transactions()
+            ->selectRaw('SUM(value) as value, tags.name as tag, tags.color as color')
+            ->join('tag_transaction', 'transactions.id', '=', 'tag_transaction.transaction_id')
+            ->leftJoin('tags', 'tag_transaction.tag_id', '=', 'tags.id')
+            ->join('categories', 'transactions.category_id', '=', 'categories.id')
+            ->whereBetween('date', $this->getPeriod($filter->period))
+            ->where('categories.type', $type)
+            ->groupBy('tags.name', 'tags.color')
+            ->get()
+            ->map(fn ($item) => DashboardTransactionByTagDTO::from($item));
+    }
+
+    /**
+     * @throws Throwable
+     */
+    public function create(StoreTransactionRequest $request): void
+    {
+        $data = $request->validated();
+
+        DB::transaction(function () use ($request, $data) {
+            $tags = $data['tags'] ?? [];
+
+            unset($data['tags']);
+
+            $transaction = $request->user()->transactions()->create($data);
+            $transaction->tags()->sync($tags);
+        });
+
+    }
+
+    /**
+     * @throws ResourceNotFoundException
+     * @throws Throwable
+     */
+    public function update(UpdateTransactionRequest $request, int $transactionId): void
+    {
+        $transaction = $this->findOrFail($transactionId);
+        $data = $request->validated();
+
+        DB::transaction(function () use ($transaction, $data) {
+            $tags = $data['tags'] ?? [];
+
+            unset($data['tags']);
+
+            $transaction->update($data);
+            $transaction->tags()->sync($tags);
+        });
+
+        $transaction->update($request->validated());
     }
 
     private function getPeriod(string $period): array

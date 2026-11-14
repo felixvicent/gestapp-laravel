@@ -4,6 +4,7 @@ import {MonthlyTransactionsGraph} from "@/components/dashboard/monthly-transacti
 import {TransactionCard} from "@/components/dashboard/transaction-card";
 import {DashboardFilter} from "@/components/dashboard/filter";
 import {TransactionByCategory} from "@/components/dashboard/transaction-by-category";
+import {TransactionByTag} from "@/components/dashboard/transaction-by-tag";
 
 export interface TransactionVariation {
     currentTotal: number;
@@ -16,18 +17,28 @@ export interface TransactionByCategory {
     category: string
 }
 
+export interface TransactionByTag {
+    total: number;
+    tag: string;
+    color: string;
+}
+
 interface Props {
     expenseVariation: TransactionVariation;
     revenueVariation: TransactionVariation;
     expenseByCategory: TransactionByCategory[];
     revenueByCategory: TransactionByCategory[];
+    expenseByTag: TransactionByTag[];
+    revenueByTag: TransactionByTag[];
 }
 
 export default function Dashboard({
     expenseVariation,
     revenueVariation,
     expenseByCategory,
-    revenueByCategory
+    revenueByCategory,
+    expenseByTag,
+    revenueByTag
 }: Props) {
     return (
         <>
@@ -45,6 +56,11 @@ export default function Dashboard({
                 <div className="grid auto-rows-min gap-4 md:grid-cols-2">
                     <TransactionByCategory transactions={revenueByCategory} title="Receitas por categoria" />
                     <TransactionByCategory transactions={expenseByCategory} title="Despesas por categoria" />
+                </div>
+
+                <div className="grid auto-rows-min gap-4 md:grid-cols-2">
+                    <TransactionByTag transactions={revenueByTag} title="Receitas por tag" />
+                    <TransactionByTag transactions={expenseByTag} title="Despesas por tag" />
                 </div>
             </div>
         </>

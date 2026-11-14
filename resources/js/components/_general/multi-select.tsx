@@ -1,5 +1,5 @@
 import {Popover, PopoverContent, PopoverTrigger} from "@/components/ui/popover";
-import {useEffect, useState} from "react";
+import {ReactNode, useEffect, useState} from "react";
 import {Button} from "@/components/ui/button";
 import {cn} from "@/lib/utils";
 import {CheckIcon, ChevronsUpDownIcon, X} from "lucide-react";
@@ -20,6 +20,7 @@ interface Props {
     emptyMessage?: string;
     disabled?: boolean;
     className?: string;
+    render?: (item: MultiSelectOption) => ReactNode;
 }
 
 export function MultiSelect({
@@ -31,7 +32,8 @@ export function MultiSelect({
     searchPlaceholder = "Pesquisar...",
     emptyMessage = "Nenhum resultado encontrado",
     disabled = false,
-    className
+    className,
+    render
 }: Props){
     const [isOpen, setIsOpen] = useState(false);
     const [selected, setSelected] = useState<number[]>(value ?? []);
@@ -76,7 +78,7 @@ export function MultiSelect({
                                     type="button"
                                     onClick={() => toggleOption(option.value)}
                                 >
-                                    {option.label}
+                                    {!!render ? render(option) : option.label}
                                     <X className="size-3"  />
                                 </Button>
                             ))}
@@ -111,7 +113,7 @@ export function MultiSelect({
                                             {isSelected && <CheckIcon className="size-3" />}
                                         </div>
 
-                                        {option.label}
+                                        {!!render ? render(option) : option.label}
                                     </CommandItem>
                                 );
                             })}

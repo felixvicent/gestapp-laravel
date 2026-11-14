@@ -9,7 +9,7 @@ import {MultiSelect} from "@/components/_general/multi-select";
 import {index} from "@/actions/App/Http/Controllers/TransactionController";
 import {Select} from "@/components/_general/select";
 import InputError from "@/components/input-error";
-import {TransactionPeriod} from "@/types/transaction-period";
+import {SelectOptions} from "@/types/select-options";
 
 interface Props {
     isOpen: boolean;
@@ -30,7 +30,7 @@ export function TransactionFilterModal({isOpen, onCloseModal}: Props){
         categories,
         errors,
         period
-    } = usePage<{ filters?: CategoryFilters, categories: Category[], period: TransactionPeriod[] }>().props;
+    } = usePage<{ filters?: CategoryFilters, categories: Category[], period: SelectOptions[] }>().props;
 
     return (
         <Dialog open={isOpen} onOpenChange={onCloseModal}>

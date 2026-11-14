@@ -15,8 +15,7 @@ const chartConfig = {};
 export function MonthlyTransactionsGraph() {
     const {
         transactionByMonth,
-        filters
-    } = usePage<{ transactionByMonth: TransactionLineGraphDTO[], filters: DashboardFilter }>().props;
+    } = usePage<{ transactionByMonth: TransactionLineGraphDTO[] }>().props;
 
     function getGraphColor(type: CategoryType){
         switch (type){

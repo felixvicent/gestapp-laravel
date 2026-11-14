@@ -28,6 +28,8 @@ class UpdateTransactionRequest extends FormRequest
             'value' => 'required|numeric|gt:0',
             'date' => 'required|date',
             'category_id' => 'required|exists:categories,id',
+            'tags' => 'nullable|array',
+            'tags.*' => 'integer|exists:tags,id',
         ];
     }
 
@@ -42,6 +44,10 @@ class UpdateTransactionRequest extends FormRequest
             'date.date' => 'A data da transação deve ser uma data válida.',
             'category_id.required' => 'A categoria da transação é obrigatória.',
             'category_id.exists' => 'A categoria selecionada é inválida.',
+            'tags.array' => 'As tags devem ser uma lista válida.',
+            'tags.*.integer' => 'O ID da tag deve ser um número inteiro.',
+            'tags.*.distinct' => 'Não é permitido selecionar tags duplicadas.',
+            'tags.*.exists' => 'Uma ou mais tags selecionadas são inválidas.',
         ];
     }
 }

@@ -1,4 +1,5 @@
 import {Category} from "@/types/category";
+import {Tag} from "@/types/tag";
 
 export interface Transaction {
     id: number;
@@ -7,6 +8,7 @@ export interface Transaction {
     value: number;
     date: Date;
     category: Category;
+    tags: Tag[];
     created_at: string;
     updated_at: string;
 }

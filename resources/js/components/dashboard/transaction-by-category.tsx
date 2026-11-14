@@ -14,7 +14,7 @@ interface Props {
 export function TransactionByCategory({title, transactions}: Props){
     return (
         <Card className="flex flex-col">
-            <CardHeader className="items-center pb-0">
+            <CardHeader className="items-center pb-0 border-b">
                 <CardTitle>{title}</CardTitle>
             </CardHeader>
             <CardContent className="flex-1 pb-0">

@@ -9,6 +9,7 @@ use App\Http\Requests\Category\FilterCategoryRequest;
 use App\Http\Requests\Category\StoreCategoryRequest;
 use App\Http\Requests\Category\UpdateCategoryRequest;
 use App\Services\CategoryService;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -16,13 +17,10 @@ class CategoryController extends Controller
 {
     public function __construct(private readonly CategoryService $categoryService) {}
 
-    public function index(FilterCategoryRequest $request): Response
+    public function index(Request $request): Response
     {
-        $filters = CategoryFilterDTO::fromRequest($request);
-
         return Inertia::render('categories', [
-            'categories' => $this->categoryService->getCategories($request->user(), $filters),
-            'filters' => $filters,
+            'categories' => $this->categoryService->getCategories($request->user()),
             'types' => collect(CategoryType::cases())
                 ->map(fn ($type) => [
                     'value' => $type->value,

@@ -9,6 +9,10 @@ import {Button} from "@/components/ui/button";
 import React from "react";
 import {Transaction} from "@/types/transaction";
 import {Select} from "@/components/_general/select";
+import {MultiSelect} from "@/components/_general/multi-select";
+import {Tag} from "@/types/tag";
+import {Badge} from "@/components/ui/badge";
+import {getContrastColor} from "@/helpers/color";
 
 interface Props {
     transaction?: Transaction | null,
@@ -17,7 +21,7 @@ interface Props {
 export function TransactionForm({transaction, onCancel}: Props) {
     const isEditing = transaction != null;
 
-    const { categories } = usePage<{ categories: Category[] }>().props
+    const { categories, tags } = usePage<{ categories: Category[], tags: Tag[] }>().props
 
     return (
         <Form {...(isEditing ? update.form(transaction.id) : store.form())}
@@ -108,6 +112,32 @@ export function TransactionForm({transaction, onCancel}: Props) {
                         />
 
                         <InputError className="mt-2" message={errors.category_id} />
+                    </div>
+
+                    <div className="grid gap-2">
+                        <Label htmlFor="tags" className="mb-1">Tags</Label>
+
+                        <MultiSelect
+                            options={tags.map(tag => ({
+                                label: tag.name,
+                                value: tag.id,
+                            }))}
+                            value={transaction?.tags.map(tag => tag.id) ?? []}
+                            name="tags"
+                            render={(item) => (
+                                <Badge style={{
+                                    backgroundColor: tags.find(tag => tag.id === item.value)?.color,
+                                    color: getContrastColor(tags.find(tag => tag.id === item.value)?.color ?? "#000000")
+                                }}>
+                                    {item.label}
+                                </Badge>
+                            )}
+                        />
+
+                        <InputError
+                            className="mt-2"
+                            message={errors.tags}
+                        />
                     </div>
 
                     <div className="flex items-center gap-4 justify-end">

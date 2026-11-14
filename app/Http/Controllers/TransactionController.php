@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\DTOs\Categories\CategoryDTO;
+use App\DTOs\Tags\TagDTO;
 use App\DTOs\Transactions\TransactionFilterDTO;
-use App\Enums\CategoryType;
 use App\Enums\TransactionPeriod;
 use App\Exceptions\ResourceNotFoundException;
 use App\Http\Requests\Transaction\FilterTransactionRequest;
@@ -11,6 +12,7 @@ use App\Http\Requests\Transaction\StoreTransactionRequest;
 use App\Http\Requests\Transaction\UpdateTransactionRequest;
 use App\Services\TransactionService;
 use Inertia\Inertia;
+use Throwable;
 
 class TransactionController extends Controller
 {
@@ -22,7 +24,8 @@ class TransactionController extends Controller
 
         return Inertia::render('transactions', [
             'transactions' => $this->transactionService->getTransactions($request->user(), $filters),
-            'categories' => $request->user()->categories()->get(),
+            'categories' => $request->user()->categories()->get()->map(fn ($category) => CategoryDTO::fromModel($category)),
+            'tags' => $request->user()->tags()->get()->map(fn ($tag) => TagDTO::fromModel($tag)),
             'filters' => $filters,
             'period' => collect(TransactionPeriod::cases())
                 ->map(fn ($type) => [
@@ -33,9 +36,12 @@ class TransactionController extends Controller
         ]);
     }
 
+    /**
+     * @throws Throwable
+     */
     public function store(StoreTransactionRequest $request)
     {
-        $request->user()->transactions()->create($request->validated());
+        $this->transactionService->create($request);
 
         Inertia::flash('toast', ['type' => 'success', 'message' => 'Transação criada com sucesso!.']);
 
@@ -43,12 +49,11 @@ class TransactionController extends Controller
     }
 
     /**
-     * @throws ResourceNotFoundException
+     * @throws ResourceNotFoundException|Throwable
      */
-    public function update(UpdateTransactionRequest $request, int $categoryId)
+    public function update(UpdateTransactionRequest $request, int $transactionId)
     {
-        $transaction = $this->transactionService->findOrFail($categoryId);
-        $transaction->update($request->validated());
+        $this->transactionService->update($request, $transactionId);
 
         Inertia::flash('toast', ['type' => 'success', 'message' => 'Transação atualizada com sucesso!.']);
 
