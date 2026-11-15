@@ -20,7 +20,7 @@ export function Pagination({ prevPageUrl, links, nextPageUrl, lastPage }: Props)
         <PaginationContent>
             {prevPageUrl && <PaginationItem><PaginationPrevious href={prevPageUrl}/></PaginationItem>}
             {generatePagination(links).map(link => (
-                <PaginationItem>
+                <PaginationItem key={link.label}>
                     <PaginationLink isActive={link.active} href={link.url ?? '#'}>
                         {link.label}
                     </PaginationLink>

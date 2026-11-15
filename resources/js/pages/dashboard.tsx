@@ -5,6 +5,8 @@ import {TransactionCard} from "@/components/dashboard/transaction-card";
 import {DashboardFilter} from "@/components/dashboard/filter";
 import {TransactionByCategory} from "@/components/dashboard/transaction-by-category";
 import {TransactionByTag} from "@/components/dashboard/transaction-by-tag";
+import {Button} from "@/components/ui/button";
+import {Filter} from "lucide-react";
 
 export interface TransactionVariation {
     currentTotal: number;

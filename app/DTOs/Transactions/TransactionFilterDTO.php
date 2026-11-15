@@ -11,7 +11,8 @@ readonly class TransactionFilterDTO
         public ?string $search,
         public ?float $maxValue,
         public ?float $minValue,
-        public ?string $period,
+        public ?string $beginDate,
+        public ?string $endDate,
         public array $categories = [],
     ) {}
 
@@ -21,7 +22,8 @@ readonly class TransactionFilterDTO
             search: $request->input('search'),
             maxValue: $request->filled('maxValue') ? (float) $request->input('maxValue') : null,
             minValue: $request->filled('minValue') ? (float) $request->input('minValue') : null,
-            period: $request->input('period', TransactionPeriod::CURRENT_MONTH->name),
+            beginDate: $request->input('beginDate', now()->startOfMonth()->toDateString()),
+            endDate: $request->input('endDate', now()->endOfMonth()->toDateString()),
             categories: array_map('intval', $request->input('categories', [])),
         );
     }

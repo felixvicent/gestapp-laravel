@@ -15,6 +15,9 @@ use App\Http\Requests\Transaction\StoreTransactionRequest;
 use App\Http\Requests\Transaction\UpdateTransactionRequest;
 use App\Models\Transaction;
 use App\Models\User;
+use Carbon\CarbonImmutable;
+use DateMalformedStringException;
+use DateTimeImmutable;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Auth;
@@ -47,8 +50,8 @@ class TransactionService
             ->when($filters->categories ?? null, function ($query, $categories) {
                 $query->whereIn('category_id', $categories);
             })
-            ->when($filters->period ?? null, function ($query, $period) {
-                $query->whereBetween('date', $this->getPeriod($period));
+            ->when($filters->beginDate && $filters->endDate, function ($query) use ($filters) {
+                $query->whereBetween('date', [$filters->beginDate, $filters->endDate]);
             })
             ->with(['category', 'tags'])
             ->latest()
@@ -76,8 +79,7 @@ class TransactionService
 
     public function getVariationByPeriodAndType(User $user, DashboardFilterDTO $filter, string $type): DashboardTransactionVariationDTO
     {
-        [$start, $end] = $this->getPeriod($filter->period);
-        [$previousStart, $previousEnd] = $this->getPreviousPeriod($filter->period);
+        [$previousStart, $previousEnd] = $this->getPreviousPeriod($filter->beginDate, $filter->endDate);
 
         return DashboardTransactionVariationDTO::from(
             $user->transactions()
@@ -85,7 +87,7 @@ class TransactionService
                     SUM(CASE WHEN date BETWEEN ? AND ? THEN value ELSE 0 END) as current_total,
                     SUM(CASE WHEN date BETWEEN ? AND ? THEN value ELSE 0 END) as previous_total
                 ', [
-                    $start, $end, $previousStart, $previousEnd,
+                    $filter->beginDate, $filter->endDate, $previousStart, $previousEnd,
                 ])
                 ->leftJoin('categories', 'transactions.category_id', '=', 'categories.id')
                 ->where('categories.type', $type)
@@ -98,7 +100,7 @@ class TransactionService
         return $user->transactions()
             ->selectRaw('SUM(value) as value, categories.name as name')
             ->leftJoin('categories', 'transactions.category_id', '=', 'categories.id')
-            ->whereBetween('date', $this->getPeriod($filter->period))
+            ->whereBetween('date', [$filter->beginDate, $filter->endDate])
             ->where('categories.type', $type)
             ->groupBy('categories.id')
             ->get()
@@ -112,7 +114,7 @@ class TransactionService
             ->join('tag_transaction', 'transactions.id', '=', 'tag_transaction.transaction_id')
             ->leftJoin('tags', 'tag_transaction.tag_id', '=', 'tags.id')
             ->join('categories', 'transactions.category_id', '=', 'categories.id')
-            ->whereBetween('date', $this->getPeriod($filter->period))
+            ->whereBetween('date', [$filter->beginDate, $filter->endDate])
             ->where('categories.type', $type)
             ->groupBy('tags.name', 'tags.color')
             ->get()
@@ -158,37 +160,26 @@ class TransactionService
         $transaction->update($request->validated());
     }
 
-    private function getPeriod(string $period): array
+    /**
+     * @throws DateMalformedStringException
+     */
+    private function getPreviousPeriod(string $beginDate, string $endDate): array
     {
-        return match ($period) {
-            'LAST_3_MONTHS' => [
-                now()->subMonths(2)->startOfMonth(),
-                now()->endOfMonth(),
-            ],
-            'LAST_6_MONTHS' => [
-                now()->subMonths(5)->startOfMonth(),
-                now()->endOfMonth(),
-            ],
-            'LAST_YEAR' => [
-                now()->startOfYear(),
-                now()->endOfYear(),
-            ],
-            default => [
-                now()->startOfMonth(),
-                now()->endOfMonth(),
-            ],
-        };
-    }
+        $start = CarbonImmutable::parse($beginDate);
+        $end = CarbonImmutable::parse($endDate);
 
-    private function getPreviousPeriod(string $period): array
-    {
-        [$start, $end] = $this->getPeriod($period);
+        $diff = (($end->year - $start->year) * 12)
+            + ($end->month - $start->month) + 1;
 
-        $diff = $start->diffInMonths($end);
+        $previousEnd = $start->subDay();
+
+        $previousStart = $previousEnd
+            ->subMonths($diff - 1)
+            ->startOfMonth();
 
         return [
-            $start->copy()->subMonths($diff)->startOfMonth(),
-            $start->copy()->subMonth()->endOfMonth(),
+            $previousStart,
+            $previousEnd,
         ];
     }
 }

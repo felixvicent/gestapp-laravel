@@ -21,15 +21,16 @@ interface CategoryFilters {
     minValue?: number;
     maxValue?: number;
     categories?: number[];
-    period?: string;
+    beginDate?: string;
+    endDate?: string;
 }
+
 
 export function TransactionFilterModal({isOpen, onCloseModal}: Props){
     const {
         filters,
         categories,
         errors,
-        period
     } = usePage<{ filters?: CategoryFilters, categories: Category[], period: SelectOptions[] }>().props;
 
     return (
@@ -112,19 +113,41 @@ export function TransactionFilterModal({isOpen, onCloseModal}: Props){
                                         name="categories"
                                     />
                                 </div>
-                                <div className="grid gap-2">
-                                    <Label htmlFor="period">Periodo</Label>
+                                <div className="flex gap-2 flex-1">
+                                    <div>
+                                        <div className="flex gap-2">
+                                            <div className="grid gap-2 w-full">
+                                                <Label htmlFor="period">Periodo Inicio</Label>
 
-                                    <Select
-                                        name="period"
-                                        placeholder="Nome da transação"
-                                        options={period}
-                                        value={filters?.period ?? 'CURRENT_MONTH'}
-                                    />
-                                    <InputError
-                                        className="mt-2"
-                                        message={errors.period}
-                                    />
+                                                <Input
+                                                    name="beginDate"
+                                                    type="date"
+                                                    className="mt-1 block w-full"
+                                                    defaultValue={filters?.beginDate}
+                                                />
+
+
+                                            </div>
+                                            <div className="grid gap-2 w-full">
+                                                <Label htmlFor="period">Periodo Fim</Label>
+
+                                                <Input
+                                                    name="endDate"
+                                                    type="date"
+                                                    className="mt-1 block w-full"
+                                                    defaultValue={filters?.endDate}
+                                                />
+                                            </div>
+                                        </div>
+                                        <InputError
+                                            className="mt-2"
+                                            message={errors.beginDate}
+                                        />
+                                        <InputError
+                                            className="mt-2"
+                                            message={errors.endDate}
+                                        />
+                                    </div>
                                 </div>
                                 <div className="flex items-center gap-4 justify-end">
                                     <Button

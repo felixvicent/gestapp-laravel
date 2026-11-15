@@ -45,7 +45,7 @@ class TransactionController extends Controller
 
         Inertia::flash('toast', ['type' => 'success', 'message' => 'Transação criada com sucesso!.']);
 
-        return redirect()->route('transactions');
+        return back();
     }
 
     /**
@@ -57,7 +57,7 @@ class TransactionController extends Controller
 
         Inertia::flash('toast', ['type' => 'success', 'message' => 'Transação atualizada com sucesso!.']);
 
-        return redirect()->route('transactions');
+        return back();
     }
 
     /**

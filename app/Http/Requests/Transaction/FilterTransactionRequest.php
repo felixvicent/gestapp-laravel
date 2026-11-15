@@ -29,7 +29,18 @@ class FilterTransactionRequest extends FormRequest
             'maxValue' => 'numeric|gte:0|nullable',
             'minValue' => 'numeric|gte:0|nullable',
             'categories' => 'array',
-            'period' => [Rule::enum(TransactionPeriod::class)],
+            'beginDate' => 'date|before_or_equal:endDate',
+            'endDate' => 'date|after_or_equal:beginDate',
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'beginDate.date_format' => 'A data inicial deve estar no formato válido.',
+            'beginDate.before_or_equal' => 'A data inicial deve ser igual ou anterior á data final.',
+            'endDate.date_format' => 'A data final deve estar no formato válido.',
+            'endDate.after_or_equal' => 'A data final deve ser igual ou posterior à data inicial.',
         ];
     }
 }

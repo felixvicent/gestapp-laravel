@@ -57,6 +57,7 @@ export default function Transactions({ transactions }: Props) {
                 <div className="flex flex-wrap gap-1">
                     {transaction.tags.map((tag) => (
                         <Badge
+                            key={tag.id}
                             className="px-1.5 py-0 text-[10px] leading-4"
                             style={{backgroundColor: tag.color, color: getContrastColor(tag.color)}}>
                             {tag.name}

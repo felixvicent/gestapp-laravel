@@ -9,13 +9,15 @@ use Illuminate\Http\Request;
 class DashboardFilterDTO
 {
     public function __construct(
-        public ?string $period,
+        public ?string $beginDate,
+        public ?string $endDate,
     ) {}
 
     public static function fromRequest(Request $request): self
     {
         return new self(
-            period: $request->input('period', TransactionPeriod::CURRENT_MONTH->name),
+            beginDate: $request->input('beginDate', now()->startOfMonth()->toDateString()),
+            endDate: $request->input('endDate', now()->endOfMonth()->toDateString()),
         );
     }
 }
