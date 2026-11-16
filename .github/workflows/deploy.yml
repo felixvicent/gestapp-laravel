@@ -1,0 +1,97 @@
+name: Deploy Laravel HostGator
+on:
+  push:
+    branches:
+      - main
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    env:
+      PROJECT_NAME: gestapp
+      PUBLIC_FOLDER: gestapp.com.br
+
+    steps:
+       #-----------------------
+       # 1 - Clone repository
+       # ______________________
+      - name: Checkout codigo
+        uses: actions/checkout@v5
+
+      #-----------------------
+      # 2 - Setup Node (Vite)
+      #-----------------------
+      - name: Setup Node
+        uses: actions/setup-node@v5
+        with:
+          node-version: lts/*
+
+      - name: Instalar dependencias JS
+        run: npm ci
+
+      - name: Build produção
+        run: npm run build
+
+      #-----------------------
+      # 3 - Setup PHP
+      #-----------------------
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.2
+
+      #-----------------------
+      # 4 - Ajustar index.php automaticamente
+      #------------------------
+      - name: Ajustar index.php para HostGator
+        run: |
+          sed -i "s|../vendor|../${PROJECT_NAME}/vendor|g" public/index.php
+          sed -i "s|../bootstrap|../${PROJECT_NAME}/bootstrap|g" public/index.php
+
+      #-----------------------
+      # 5 - Deploy Backend (Laravel completo)
+      #-----------------------
+      - name: Deploy Backend
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+        with:
+          server: ${{ secrets.FTP_HOST }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ./
+          server-dir: /${{ env.PROJECT_NAME }}/
+          exclude: |
+            **/.git*
+            **/node_modules/**
+            tests/**
+            vendor/**
+            .git/**
+
+      #-----------------------
+      # 6 - Deploy Arquivos públicos
+      #-----------------------
+      - name: Deploy Public
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+        with:
+          server: ${{ secrets.FTP_HOST }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ./public/
+          server-dir: /${{ env.PUBLIC_FOLDER }}/
+
+      #-----------------------
+      # 7 - Composer install no servidor
+      #-----------------------
+      - name: Rodar Composer na HostGator
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          script: |
+            cd ${{ env.PROJECT_NAME }}
+
+            /opt/cpanel/composer/bin/composer install --no-dev --optimize-autoloader
+
+            php artisan optimize:clear
+            php artisan migrate --force
+            php artisan optimize
