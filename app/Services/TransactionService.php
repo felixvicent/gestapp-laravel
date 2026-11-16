@@ -38,6 +38,7 @@ class TransactionService
     public function getTransactions(User $user, TransactionFilterDTO $filters): LengthAwarePaginator
     {
         return $user->transactions()
+            ->select('transactions.*')
             ->when($filters->search ?? null, function ($query, $search) {
                 $query->where('title', 'like', "%{$search}%");
             })
@@ -50,10 +51,15 @@ class TransactionService
             ->when($filters->categories ?? null, function ($query, $categories) {
                 $query->whereIn('category_id', $categories);
             })
+            ->when($filters->tags ?? null, function ($query, $tags) {
+                $query->whereIn('tags.id', $tags);
+            })
             ->when($filters->beginDate && $filters->endDate, function ($query) use ($filters) {
                 $query->whereBetween('date', [$filters->beginDate, $filters->endDate]);
             })
             ->with(['category', 'tags'])
+            ->leftJoin('tag_transaction', 'transactions.id', '=', 'tag_transaction.transaction_id')
+            ->leftJoin('tags', 'tag_transaction.tag_id', '=', 'tags.id')
             ->latest()
             ->paginate(10)
             ->withQueryString()

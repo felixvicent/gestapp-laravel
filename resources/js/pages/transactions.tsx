@@ -4,7 +4,6 @@ import {Button} from "@/components/ui/button";
 import {Filter, Plus} from "lucide-react";
 import {PaginatedData} from "@/types/pagination";
 import {useState} from "react";
-import {TransactionDialogForm} from "@/components/transactions/dialog-form";
 import {Transaction} from "@/types/transaction";
 import {TransactionFilterModal} from "@/components/transactions/filter-modal";
 import {ColumnProps, Table} from "@/components/_general/table";
@@ -15,6 +14,8 @@ import {DeleteDialog} from "@/components/delete-dialog";
 import {destroy} from "@/routes/transactions";
 import {Badge} from "@/components/ui/badge";
 import {getContrastColor} from "@/helpers/color";
+import {DialogForm} from "@/components/_general/dialog-form";
+import {TransactionForm} from "@/components/transactions/form";
 
 interface Props {
     transactions: PaginatedData<Transaction>
@@ -108,10 +109,13 @@ export default function Transactions({ transactions }: Props) {
                     }}
                 />
             </div>
-            <TransactionDialogForm
+            <DialogForm
                 isOpen={isModalOpen}
-                onCloseModal={handleCloseModal}
-                transaction={selectedTransactionToUpdate}
+                onClose={handleCloseModal}
+                title={!!selectedTransactionToUpdate ? "Editar transação" : "Criar transação"}
+                form={
+                    <TransactionForm onCancel={handleCloseModal} transaction={selectedTransactionToUpdate} />
+                }
             />
             <TransactionFilterModal
                 isOpen={isFilterModalOpen}

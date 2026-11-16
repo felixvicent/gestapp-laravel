@@ -10,13 +10,16 @@ import {index} from "@/actions/App/Http/Controllers/TransactionController";
 import {Select} from "@/components/_general/select";
 import InputError from "@/components/input-error";
 import {SelectOptions} from "@/types/select-options";
+import {Tag} from "@/types/tag";
+import {Badge} from "@/components/ui/badge";
+import {getContrastColor} from "@/helpers/color";
 
 interface Props {
     isOpen: boolean;
     onCloseModal: () => void;
 }
 
-interface CategoryFilters {
+interface TransactionFilters {
     search?: string;
     minValue?: number;
     maxValue?: number;
@@ -30,8 +33,9 @@ export function TransactionFilterModal({isOpen, onCloseModal}: Props){
     const {
         filters,
         categories,
+        tags,
         errors,
-    } = usePage<{ filters?: CategoryFilters, categories: Category[], period: SelectOptions[] }>().props;
+    } = usePage<{ filters?: TransactionFilters, categories: Category[], tags: Tag[] }>().props;
 
     return (
         <Dialog open={isOpen} onOpenChange={onCloseModal}>
@@ -101,18 +105,6 @@ export function TransactionFilterModal({isOpen, onCloseModal}: Props){
                                         </div>
                                     </div>
                                 </div>
-                                <div className="grid gap-2">
-                                    <Label htmlFor="type" className="mb-1">Categoria</Label>
-
-                                    <MultiSelect
-                                        options={categories.map(category => ({
-                                            label: category.name,
-                                            value: category.id,
-                                        }))}
-                                        value={filters?.categories ?? []}
-                                        name="categories"
-                                    />
-                                </div>
                                 <div className="flex gap-2 flex-1">
                                     <div>
                                         <div className="flex gap-2">
@@ -125,8 +117,6 @@ export function TransactionFilterModal({isOpen, onCloseModal}: Props){
                                                     className="mt-1 block w-full"
                                                     defaultValue={filters?.beginDate}
                                                 />
-
-
                                             </div>
                                             <div className="grid gap-2 w-full">
                                                 <Label htmlFor="period">Periodo Fim</Label>
@@ -148,6 +138,38 @@ export function TransactionFilterModal({isOpen, onCloseModal}: Props){
                                             message={errors.endDate}
                                         />
                                     </div>
+                                </div>
+                                <div className="grid gap-2">
+                                    <Label htmlFor="categories" className="mb-1">Categoria</Label>
+
+                                    <MultiSelect
+                                        options={categories.map(category => ({
+                                            label: category.name,
+                                            value: category.id,
+                                        }))}
+                                        value={filters?.categories ?? []}
+                                        name="categories"
+                                    />
+                                </div>
+                                <div className="grid gap-2">
+                                    <Label htmlFor="tags" className="mb-1">Tags</Label>
+
+                                    <MultiSelect
+                                        options={tags.map(tag => ({
+                                            label: tag.name,
+                                            value: tag.id,
+                                        }))}
+                                        value={filters?.categories ?? []}
+                                        name="tags"
+                                        render={(item) => (
+                                            <Badge style={{
+                                                backgroundColor: tags.find(tag => tag.id === item.value)?.color,
+                                                color: getContrastColor(tags.find(tag => tag.id === item.value)?.color ?? "#000000")
+                                            }}>
+                                                {item.label}
+                                            </Badge>
+                                        )}
+                                    />
                                 </div>
                                 <div className="flex items-center gap-4 justify-end">
                                     <Button

@@ -27,12 +27,6 @@ class TransactionController extends Controller
             'categories' => $request->user()->categories()->get()->map(fn ($category) => CategoryDTO::fromModel($category)),
             'tags' => $request->user()->tags()->get()->map(fn ($tag) => TagDTO::fromModel($tag)),
             'filters' => $filters,
-            'period' => collect(TransactionPeriod::cases())
-                ->map(fn ($type) => [
-                    'value' => $type->value,
-                    'label' => $type->label(),
-                ])
-                ->values(),
         ]);
     }
 

@@ -14,6 +14,7 @@ readonly class TransactionFilterDTO
         public ?string $beginDate,
         public ?string $endDate,
         public array $categories = [],
+        public array $tags = [],
     ) {}
 
     public static function fromRequest(Request $request): self
@@ -25,6 +26,7 @@ readonly class TransactionFilterDTO
             beginDate: $request->input('beginDate', now()->startOfMonth()->toDateString()),
             endDate: $request->input('endDate', now()->endOfMonth()->toDateString()),
             categories: array_map('intval', $request->input('categories', [])),
+            tags: array_map('intval', $request->input('tags', [])),
         );
     }
 }

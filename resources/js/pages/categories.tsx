@@ -4,7 +4,6 @@ import {Button} from "@/components/ui/button";
 import {Plus} from "lucide-react";
 import {useState} from "react";
 import {Category} from "@/types/category";
-import {CategoryDialogForm} from "@/components/categories/dialog-form";
 import {PaginatedData} from "@/types/pagination";
 import {ColumnProps, Table} from "@/components/_general/table";
 import {DropdownMenu} from "@/components/_general/dropdown-menu";
@@ -12,6 +11,8 @@ import {parseCategoryType} from "@/helpers/parse";
 import {SelectOptions} from "@/types/select-options";
 import {DeleteDialog} from "@/components/delete-dialog";
 import {destroy} from "@/routes/categories";
+import {DialogForm} from "@/components/_general/dialog-form";
+import {CategoryForm} from "@/components/categories/form";
 
 interface Props {
     categories: PaginatedData<Category>,
@@ -26,6 +27,11 @@ export default function Categories({ categories, types } : Props) {
     function handleEditModalOpen(category: Category) {
         setSelectedCategoryToUpdate(category);
         setIsModalOpen(true);
+    }
+
+    function handleModalClose() {
+        setSelectedCategoryToUpdate(null);
+        setIsModalOpen(false);
     }
 
     function handleDeleteDialogOpen(category: Category) {
@@ -82,10 +88,17 @@ export default function Categories({ categories, types } : Props) {
                     }}
                 />
             </div>
-            <CategoryDialogForm
+
+            <DialogForm
                 isOpen={isModalOpen}
-                onCloseModal={() => setIsModalOpen(false)}
-                category={selectedCategoryToUpdate}
+                onClose={handleModalClose}
+                title={!!selectedCategoryToUpdate ? "Editar categoria" : "Criar categoria"}
+                form={
+                    <CategoryForm
+                        onCancel={handleModalClose}
+                        category={selectedCategoryToUpdate}
+                    />
+                }
             />
 
             <DeleteDialog
