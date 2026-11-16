@@ -63,7 +63,7 @@ jobs:
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           local-dir: ./
-          server-dir: /${{ env.PROJECT_NAME }}/
+          server-dir: ./
           exclude: |
             **/.git*
             **/node_modules/**
@@ -81,7 +81,7 @@ jobs:
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           local-dir: ./public/
-          server-dir: /${{ env.PUBLIC_FOLDER }}/
+          server-dir: ../${{ env.PUBLIC_FOLDER }}/
 
       #-----------------------
       # 7 - Composer install no servidor
