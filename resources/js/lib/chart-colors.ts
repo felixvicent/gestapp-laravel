@@ -1,4 +1,3 @@
-
 const CHART_COLORS = [
     '#3B82F6', // Azul
     '#F59E0B', // Âmbar

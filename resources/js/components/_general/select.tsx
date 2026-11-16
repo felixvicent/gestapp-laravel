@@ -1,5 +1,11 @@
-import {SelectContent, SelectItem, SelectTrigger, SelectValue, Select as SelectBase} from "@/components/ui/select";
-import React from "react";
+import {
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+    Select as SelectBase,
+} from '@/components/ui/select';
+import React from 'react';
 
 interface SelectOptions {
     label: string;
@@ -9,21 +15,29 @@ interface SelectOptions {
 interface Props {
     value?: string;
     name?: string;
-    placeholder?: string
-    options: SelectOptions[]
-    onChange?: (value: string) => void
+    placeholder?: string;
+    options: SelectOptions[];
+    onChange?: (value: string) => void;
 }
-export function Select({value, name, placeholder = "Selecione...", options, onChange}: Props) {
+export function Select({
+    value,
+    name,
+    placeholder = 'Selecione...',
+    options,
+    onChange,
+}: Props) {
     return (
         <SelectBase name={name} defaultValue={value} onValueChange={onChange}>
             <SelectTrigger className="mt-1 w-full">
                 <SelectValue placeholder={placeholder} />
             </SelectTrigger>
             <SelectContent>
-                {options.map(option => (
-                    <SelectItem key={option.value} value={option.value}>{option.label}</SelectItem>
+                {options.map((option) => (
+                    <SelectItem key={option.value} value={option.value}>
+                        {option.label}
+                    </SelectItem>
                 ))}
             </SelectContent>
         </SelectBase>
-    )
+    );
 }

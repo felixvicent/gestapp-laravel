@@ -1,31 +1,35 @@
-import {Head, router} from "@inertiajs/react";
-import {tags} from "@/routes";
-import {PaginatedData} from "@/types/pagination";
-import {Tag} from "@/types/tag";
-import {Button} from "@/components/ui/button";
-import {Filter, Plus} from "lucide-react";
-import {ColumnProps, Table} from "@/components/_general/table";
-import {DialogForm} from "@/components/_general/dialog-form";
-import {useState} from "react";
-import {TagForm} from "@/components/tags/form";
-import {Badge} from "@/components/ui/badge";
-import {DropdownMenu} from "@/components/_general/dropdown-menu";
-import {DeleteDialog} from "@/components/delete-dialog";
-import {destroy} from "@/routes/tags";
-import {getContrastColor} from "@/helpers/color";
+import { Head, router } from '@inertiajs/react';
+import { tags } from '@/routes';
+import { PaginatedData } from '@/types/pagination';
+import { Tag } from '@/types/tag';
+import { Button } from '@/components/ui/button';
+import { Filter, Plus } from 'lucide-react';
+import { ColumnProps, Table } from '@/components/_general/table';
+import { DialogForm } from '@/components/_general/dialog-form';
+import { useState } from 'react';
+import { TagForm } from '@/components/tags/form';
+import { Badge } from '@/components/ui/badge';
+import { DropdownMenu } from '@/components/_general/dropdown-menu';
+import { DeleteDialog } from '@/components/delete-dialog';
+import { destroy } from '@/routes/tags';
+import { getContrastColor } from '@/helpers/color';
 
 interface Props {
-    tags: PaginatedData<Tag>
+    tags: PaginatedData<Tag>;
 }
 
-export default function Tags({tags}: Props) {
+export default function Tags({ tags }: Props) {
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [selectedTagToUpdate, setSelectedTagToUpdate] = useState<Tag | null>(null);
-    const [selectedTagToDelete, setSelectedTagToDelete] = useState<Tag | null>(null);
+    const [selectedTagToUpdate, setSelectedTagToUpdate] = useState<Tag | null>(
+        null,
+    );
+    const [selectedTagToDelete, setSelectedTagToDelete] = useState<Tag | null>(
+        null,
+    );
 
     function handleEditModalOpen(tag: Tag) {
         setSelectedTagToUpdate(tag);
-        setIsModalOpen(true)
+        setIsModalOpen(true);
     }
 
     function handleDeleteDialogOpen(tag: Tag) {
@@ -33,12 +37,12 @@ export default function Tags({tags}: Props) {
     }
 
     function handleDelete() {
-        if(selectedTagToDelete == null) return;
+        if (selectedTagToDelete == null) return;
 
         router.delete(destroy(selectedTagToDelete.id).url, {
             preserveScroll: true,
-            onSuccess: () => setSelectedTagToDelete(null)
-        })
+            onSuccess: () => setSelectedTagToDelete(null),
+        });
     }
 
     const COLUMNS: ColumnProps<Tag>[] = [
@@ -47,21 +51,35 @@ export default function Tags({tags}: Props) {
             key: 'name',
             title: 'Nome',
             render: (tag) => (
-                <Badge style={{ backgroundColor: tag.color, color: getContrastColor(tag.color) }}>{tag.name}</Badge>
-            )
+                <Badge
+                    style={{
+                        backgroundColor: tag.color,
+                        color: getContrastColor(tag.color),
+                    }}
+                >
+                    {tag.name}
+                </Badge>
+            ),
         },
         {
             class: 'text-right',
             render: (tag: Tag) => (
                 <DropdownMenu
                     options={[
-                        { label: 'Editar', onClick: () => handleEditModalOpen(tag) },
-                        { label: 'Apagar', onClick: () => handleDeleteDialogOpen(tag), variant: 'destructive' },
+                        {
+                            label: 'Editar',
+                            onClick: () => handleEditModalOpen(tag),
+                        },
+                        {
+                            label: 'Apagar',
+                            onClick: () => handleDeleteDialogOpen(tag),
+                            variant: 'destructive',
+                        },
                     ]}
                 />
-            )
-        }
-    ]
+            ),
+        },
+    ];
 
     return (
         <>
@@ -76,38 +94,53 @@ export default function Tags({tags}: Props) {
                     </div>
                 )}
 
-                <Table columns={COLUMNS} data={tags} emptyProps={{
-                    title: 'Nenhuma tag cadastrada',
-                    description: 'Você ainda não criou nenhuma tag. Crie tags para identificar e organizar suas transações com mais facilidade.',
-                    actionText: 'Adicionar tag',
-                    action: () => setIsModalOpen(true),
-                }} />
+                <Table
+                    columns={COLUMNS}
+                    data={tags}
+                    emptyProps={{
+                        title: 'Nenhuma tag cadastrada',
+                        description:
+                            'Você ainda não criou nenhuma tag. Crie tags para identificar e organizar suas transações com mais facilidade.',
+                        actionText: 'Adicionar tag',
+                        action: () => setIsModalOpen(true),
+                    }}
+                />
             </div>
 
             <DialogForm
                 isOpen={isModalOpen}
                 onClose={() => setIsModalOpen(false)}
-                title={!!selectedTagToUpdate ? "Editar tag" : "Criar tag"}
-                form={<TagForm onCancel={() => setIsModalOpen(false)} tag={selectedTagToUpdate} />}
+                title={!!selectedTagToUpdate ? 'Editar tag' : 'Criar tag'}
+                form={
+                    <TagForm
+                        onCancel={() => setIsModalOpen(false)}
+                        tag={selectedTagToUpdate}
+                    />
+                }
             />
 
             <DeleteDialog
                 isOpen={!!selectedTagToDelete}
                 onClose={() => setSelectedTagToDelete(null)}
                 title="Apagar categoria"
-                description={<span>Tem certeza que deseja excluir
-                    <strong> {selectedTagToDelete?.name}</strong>?
-                    Essa ação não poderá ser desfeita.</span>}
-                onAction={handleDelete} />
+                description={
+                    <span>
+                        Tem certeza que deseja excluir
+                        <strong> {selectedTagToDelete?.name}</strong>? Essa ação
+                        não poderá ser desfeita.
+                    </span>
+                }
+                onAction={handleDelete}
+            />
         </>
-    )
+    );
 }
 
 Tags.layout = {
     breadcrumbs: [
         {
             title: 'Tags',
-            href: tags()
-        }
-    ]
-}
+            href: tags(),
+        },
+    ],
+};

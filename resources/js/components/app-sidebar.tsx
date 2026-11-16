@@ -1,5 +1,5 @@
 import { Link } from '@inertiajs/react';
-import {LayoutGrid, ReceiptText, SquareStack, Tags} from 'lucide-react';
+import { LayoutGrid, ReceiptText, SquareStack, Tags } from 'lucide-react';
 import AppLogo from '@/components/app-logo';
 import { NavFooter } from '@/components/nav-footer';
 import { NavMain } from '@/components/nav-main';
@@ -13,7 +13,7 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
-import {categories, dashboard, tags, transactions} from '@/routes';
+import { categories, dashboard, tags, transactions } from '@/routes';
 import type { NavItem } from '@/types';
 
 const mainNavItems: NavItem[] = [
@@ -35,8 +35,8 @@ const mainNavItems: NavItem[] = [
     {
         title: 'Tags',
         href: tags(),
-        icon: Tags
-    }
+        icon: Tags,
+    },
 ];
 
 const footerNavItems: NavItem[] = [];

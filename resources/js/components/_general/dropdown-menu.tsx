@@ -1,15 +1,20 @@
-import {DropdownMenu as DropdownMenuShadcn, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger} from "@/components/ui/dropdown-menu";
-import {Button} from "@/components/ui/button";
-import {MoreVertical} from "lucide-react";
+import {
+    DropdownMenu as DropdownMenuShadcn,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { Button } from '@/components/ui/button';
+import { MoreVertical } from 'lucide-react';
 
 interface DropdownMenuItems {
     label: string;
     onClick: () => void;
-    variant?: "default" | "destructive";
+    variant?: 'default' | 'destructive';
 }
 
 interface Props {
-    options: DropdownMenuItems[]
+    options: DropdownMenuItems[];
 }
 export function DropdownMenu({ options }: Props) {
     return (
@@ -22,11 +27,14 @@ export function DropdownMenu({ options }: Props) {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
                 {options.map((option, index) => (
-                    <DropdownMenuItem onClick={option.onClick} variant={option.variant ?? 'default'}>
+                    <DropdownMenuItem
+                        onClick={option.onClick}
+                        variant={option.variant ?? 'default'}
+                    >
                         {option.label}
                     </DropdownMenuItem>
                 ))}
             </DropdownMenuContent>
         </DropdownMenuShadcn>
-    )
+    );
 }

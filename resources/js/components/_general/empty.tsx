@@ -4,10 +4,10 @@ import {
     EmptyDescription,
     EmptyHeader,
     EmptyMedia,
-    EmptyTitle
-} from "@/components/ui/empty";
-import {FolderCode} from "lucide-react";
-import {Button} from "@/components/ui/button";
+    EmptyTitle,
+} from '@/components/ui/empty';
+import { FolderCode } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 export interface EmptyProps {
     title?: string;
@@ -16,7 +16,12 @@ export interface EmptyProps {
     actionText?: string;
 }
 
-export function Empty({ title = 'Nenhum resultado encontrado', description, action, actionText }: EmptyProps) {
+export function Empty({
+    title = 'Nenhum resultado encontrado',
+    description,
+    action,
+    actionText,
+}: EmptyProps) {
     return (
         <EmptyShadcn>
             <EmptyHeader>
@@ -27,10 +32,8 @@ export function Empty({ title = 'Nenhum resultado encontrado', description, acti
                 <EmptyDescription>{description}</EmptyDescription>
             </EmptyHeader>
             <EmptyContent>
-                {action && (
-                    <Button onClick={action}>{actionText}</Button>
-                )}
+                {action && <Button onClick={action}>{actionText}</Button>}
             </EmptyContent>
         </EmptyShadcn>
-    )
+    );
 }

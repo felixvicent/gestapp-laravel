@@ -1,5 +1,5 @@
 export function getContrastColor(hex: string): string {
-    const color = hex.replace("#", "");
+    const color = hex.replace('#', '');
 
     const r = parseInt(color.substring(0, 2), 16);
     const g = parseInt(color.substring(2, 4), 16);
@@ -7,5 +7,5 @@ export function getContrastColor(hex: string): string {
 
     const brightness = (r * 299 + g * 587 + b * 114) / 1000;
 
-    return brightness > 150 ? "#000000" : "#FFFFFF";
+    return brightness > 150 ? '#000000' : '#FFFFFF';
 }

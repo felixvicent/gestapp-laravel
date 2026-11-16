@@ -1,8 +1,15 @@
-import {Table as TableShadcn, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
-import {PaginatedData} from "@/types/pagination";
-import {ReactNode} from "react";
-import {Pagination} from "@/components/pagination";
-import {Empty, EmptyProps} from "@/components/_general/empty";
+import {
+    Table as TableShadcn,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from '@/components/ui/table';
+import { PaginatedData } from '@/types/pagination';
+import { ReactNode } from 'react';
+import { Pagination } from '@/components/pagination';
+import { Empty, EmptyProps } from '@/components/_general/empty';
 
 export interface ColumnProps<T> {
     title?: string;
@@ -13,30 +20,39 @@ export interface ColumnProps<T> {
 
 interface Props<T> {
     columns: ColumnProps<T>[];
-    data:  PaginatedData<T>;
+    data: PaginatedData<T>;
     emptyProps?: EmptyProps;
 }
 
 export function Table<T>({ columns, data, emptyProps }: Props<T>) {
-    if(data.data.length === 0) return (
-        <Empty {...emptyProps }/>
-    );
+    if (data.data.length === 0) return <Empty {...emptyProps} />;
     return (
         <>
-            <TableShadcn className="rounded-lg overflow-hidden">
+            <TableShadcn className="overflow-hidden rounded-lg">
                 <TableHeader className="sticky top-0 z-10 bg-muted">
                     <TableRow>
-                        {columns.map(column => (
-                            <TableHead key={String(column.key)} className={column.class}>{column.title}</TableHead>
+                        {columns.map((column) => (
+                            <TableHead
+                                key={String(column.key)}
+                                className={column.class}
+                            >
+                                {column.title}
+                            </TableHead>
                         ))}
                     </TableRow>
                 </TableHeader>
                 <TableBody>
                     {data.data.map((item, index) => (
                         <TableRow key={index}>
-                            {columns.map(column => (
-                                <TableCell key={String(column.key)} className={column.class}>
-                                    {column.render ? column.render(item) : column.key && String(item[column.key] ?? '-')}
+                            {columns.map((column) => (
+                                <TableCell
+                                    key={String(column.key)}
+                                    className={column.class}
+                                >
+                                    {column.render
+                                        ? column.render(item)
+                                        : column.key &&
+                                          String(item[column.key] ?? '-')}
                                 </TableCell>
                             ))}
                         </TableRow>
@@ -52,5 +68,5 @@ export function Table<T>({ columns, data, emptyProps }: Props<T>) {
                 />
             </div>
         </>
-    )
+    );
 }

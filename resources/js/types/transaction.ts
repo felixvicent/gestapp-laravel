@@ -1,5 +1,5 @@
-import {Category} from "@/types/category";
-import {Tag} from "@/types/tag";
+import { Category } from '@/types/category';
+import { Tag } from '@/types/tag';
 
 export interface Transaction {
     id: number;

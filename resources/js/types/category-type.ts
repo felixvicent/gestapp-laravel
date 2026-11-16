@@ -1,1 +1,1 @@
-export type CategoryType = 'EXPENSE' | 'REVENUE'
+export type CategoryType = 'EXPENSE' | 'REVENUE';

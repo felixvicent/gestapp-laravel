@@ -1,19 +1,31 @@
-import {TransactionByTag as TransactionByTagType} from "@/pages/dashboard";
-import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card";
-import {ChartContainer, ChartTooltip, ChartTooltipContent} from "@/components/ui/chart";
-import {Bar, BarChart, CartesianGrid, Cell, LabelList, XAxis, YAxis} from "recharts";
-import {formatCurrency} from "@/helpers/format";
-import {getContrastColor} from "@/helpers/color";
+import { TransactionByTag as TransactionByTagType } from '@/pages/dashboard';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+    ChartContainer,
+    ChartTooltip,
+    ChartTooltipContent,
+} from '@/components/ui/chart';
+import {
+    Bar,
+    BarChart,
+    CartesianGrid,
+    Cell,
+    LabelList,
+    XAxis,
+    YAxis,
+} from 'recharts';
+import { formatCurrency } from '@/helpers/format';
+import { getContrastColor } from '@/helpers/color';
 
 interface Props {
     title: string;
-    transactions: TransactionByTagType[]
+    transactions: TransactionByTagType[];
 }
 
-export function TransactionByTag({title, transactions}: Props){
+export function TransactionByTag({ title, transactions }: Props) {
     return (
         <Card>
-            <CardHeader className="items-center pb-0 border-b">
+            <CardHeader className="items-center border-b pb-0">
                 <CardTitle>{title}</CardTitle>
             </CardHeader>
             <CardContent>
@@ -22,7 +34,7 @@ export function TransactionByTag({title, transactions}: Props){
                         accessibilityLayer
                         data={transactions}
                         layout="vertical"
-                        margin={{ right: 64}}
+                        margin={{ right: 64 }}
                     >
                         <CartesianGrid horizontal={false} />
                         <YAxis
@@ -48,7 +60,9 @@ export function TransactionByTag({title, transactions}: Props){
                                         <div className="flex items-center gap-2">
                                             <div
                                                 className="size-2.5 rounded-full"
-                                                style={{ backgroundColor: tag.color }}
+                                                style={{
+                                                    backgroundColor: tag.color,
+                                                }}
                                             />
 
                                             <span className="text-sm font-medium">
@@ -57,7 +71,9 @@ export function TransactionByTag({title, transactions}: Props){
                                         </div>
 
                                         <p className="mt-1 text-sm font-semibold">
-                                            {formatCurrency(Number(item.value ?? 0))}
+                                            {formatCurrency(
+                                                Number(item.value ?? 0),
+                                            )}
                                         </p>
                                     </div>
                                 );
@@ -70,7 +86,13 @@ export function TransactionByTag({title, transactions}: Props){
                             <LabelList
                                 dataKey="tag"
                                 content={(props) => {
-                                    const { width = 0, height = 0, x = 0, y = 0, value } = props;
+                                    const {
+                                        width = 0,
+                                        height = 0,
+                                        x = 0,
+                                        y = 0,
+                                        value,
+                                    } = props;
 
                                     if (Number(width) < 80) return null;
 
@@ -78,7 +100,9 @@ export function TransactionByTag({title, transactions}: Props){
                                         <text
                                             x={Number(x) + 8}
                                             y={Number(y) + Number(height) / 2}
-                                            fill={getContrastColor(props?.fill ?? "#000000")}
+                                            fill={getContrastColor(
+                                                props?.fill ?? '#000000',
+                                            )}
                                             fontSize={12}
                                             dominantBaseline="middle"
                                         >
@@ -93,7 +117,9 @@ export function TransactionByTag({title, transactions}: Props){
                                 offset={8}
                                 className="fill-foreground"
                                 fontSize={12}
-                                formatter={(value) => formatCurrency(Number(value ?? 0))}
+                                formatter={(value) =>
+                                    formatCurrency(Number(value ?? 0))
+                                }
                             />
                         </Bar>
                     </BarChart>

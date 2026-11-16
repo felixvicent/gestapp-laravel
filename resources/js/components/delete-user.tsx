@@ -48,10 +48,11 @@ export default function DeleteUser() {
                             Tem certeza de que deseja excluir sua conta?
                         </DialogTitle>
                         <DialogDescription>
-                            Assim que sua conta for excluída, todos os seus recursos
-                            e dados também serão excluídos permanentemente. Por favor,
-                            insira sua senha para confirmar que deseja
-                            excluir sua conta permanentemente.
+                            Assim que sua conta for excluída, todos os seus
+                            recursos e dados também serão excluídos
+                            permanentemente. Por favor, insira sua senha para
+                            confirmar que deseja excluir sua conta
+                            permanentemente.
                         </DialogDescription>
 
                         <Form

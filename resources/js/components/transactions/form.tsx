@@ -1,37 +1,44 @@
-import {Form, usePage} from "@inertiajs/react";
-import {store,update} from "@/actions/App/Http/Controllers/TransactionController";
-import {Category} from "@/types/category";
-import {Label} from "@/components/ui/label";
-import {Input} from "@/components/ui/input";
-import InputError from "@/components/input-error";
-import {Textarea} from "@/components/ui/textarea";
-import {Button} from "@/components/ui/button";
-import React from "react";
-import {Transaction} from "@/types/transaction";
-import {Select} from "@/components/_general/select";
-import {MultiSelect} from "@/components/_general/multi-select";
-import {Tag} from "@/types/tag";
-import {Badge} from "@/components/ui/badge";
-import {getContrastColor} from "@/helpers/color";
+import { Form, usePage } from '@inertiajs/react';
+import {
+    store,
+    update,
+} from '@/actions/App/Http/Controllers/TransactionController';
+import { Category } from '@/types/category';
+import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
+import InputError from '@/components/input-error';
+import { Textarea } from '@/components/ui/textarea';
+import { Button } from '@/components/ui/button';
+import React from 'react';
+import { Transaction } from '@/types/transaction';
+import { Select } from '@/components/_general/select';
+import { MultiSelect } from '@/components/_general/multi-select';
+import { Tag } from '@/types/tag';
+import { Badge } from '@/components/ui/badge';
+import { getContrastColor } from '@/helpers/color';
 
 interface Props {
-    transaction?: Transaction | null,
-    onCancel: () => void,
+    transaction?: Transaction | null;
+    onCancel: () => void;
 }
-export function TransactionForm({transaction, onCancel}: Props) {
+export function TransactionForm({ transaction, onCancel }: Props) {
     const isEditing = transaction != null;
 
-    const { categories, tags } = usePage<{ categories: Category[], tags: Tag[] }>().props
+    const { categories, tags } = usePage<{
+        categories: Category[];
+        tags: Tag[];
+    }>().props;
 
     return (
-        <Form {...(isEditing ? update.form(transaction.id) : store.form())}
-              options={{
-                  preserveScroll: true
-              }}
-              className="space-y-6"
-              onSuccess={() => onCancel()}
+        <Form
+            {...(isEditing ? update.form(transaction.id) : store.form())}
+            options={{
+                preserveScroll: true,
+            }}
+            className="space-y-6"
+            onSuccess={() => onCancel()}
         >
-            {({processing, errors}) => (
+            {({ processing, errors }) => (
                 <>
                     <div className="grid gap-2">
                         <Label htmlFor="title">Título</Label>
@@ -45,10 +52,7 @@ export function TransactionForm({transaction, onCancel}: Props) {
                             defaultValue={transaction?.title ?? ''}
                         />
 
-                        <InputError
-                            className="mt-2"
-                            message={errors.title}
-                        />
+                        <InputError className="mt-2" message={errors.title} />
                     </div>
                     <div className="grid gap-2">
                         <Label htmlFor="description">Descrição</Label>
@@ -75,10 +79,7 @@ export function TransactionForm({transaction, onCancel}: Props) {
                             step="0.01"
                         />
 
-                        <InputError
-                            className="mt-2"
-                            message={errors.value}
-                        />
+                        <InputError className="mt-2" message={errors.value} />
                     </div>
 
                     <div className="grid gap-2">
@@ -93,10 +94,7 @@ export function TransactionForm({transaction, onCancel}: Props) {
                             defaultValue={transaction?.date.toString()}
                         />
 
-                        <InputError
-                            className="mt-2"
-                            message={errors.date}
-                        />
+                        <InputError className="mt-2" message={errors.date} />
                     </div>
 
                     <div className="grid gap-2">
@@ -105,42 +103,52 @@ export function TransactionForm({transaction, onCancel}: Props) {
                         <Select
                             name="category_id"
                             value={transaction?.category.id.toString()}
-                            options={
-                                categories
-                                    .map(category => ({ label: category.name, value: category.id.toString() }))
-                            }
+                            options={categories.map((category) => ({
+                                label: category.name,
+                                value: category.id.toString(),
+                            }))}
                         />
 
-                        <InputError className="mt-2" message={errors.category_id} />
+                        <InputError
+                            className="mt-2"
+                            message={errors.category_id}
+                        />
                     </div>
 
                     <div className="grid gap-2">
-                        <Label htmlFor="tags" className="mb-1">Tags</Label>
+                        <Label htmlFor="tags" className="mb-1">
+                            Tags
+                        </Label>
 
                         <MultiSelect
-                            options={tags.map(tag => ({
+                            options={tags.map((tag) => ({
                                 label: tag.name,
                                 value: tag.id,
                             }))}
-                            value={transaction?.tags.map(tag => tag.id) ?? []}
+                            value={transaction?.tags.map((tag) => tag.id) ?? []}
                             name="tags"
                             render={(item) => (
-                                <Badge style={{
-                                    backgroundColor: tags.find(tag => tag.id === item.value)?.color,
-                                    color: getContrastColor(tags.find(tag => tag.id === item.value)?.color ?? "#000000")
-                                }}>
+                                <Badge
+                                    style={{
+                                        backgroundColor: tags.find(
+                                            (tag) => tag.id === item.value,
+                                        )?.color,
+                                        color: getContrastColor(
+                                            tags.find(
+                                                (tag) => tag.id === item.value,
+                                            )?.color ?? '#000000',
+                                        ),
+                                    }}
+                                >
                                     {item.label}
                                 </Badge>
                             )}
                         />
 
-                        <InputError
-                            className="mt-2"
-                            message={errors.tags}
-                        />
+                        <InputError className="mt-2" message={errors.tags} />
                     </div>
 
-                    <div className="flex items-center gap-4 justify-end">
+                    <div className="flex items-center justify-end gap-4">
                         <Button
                             variant="outline"
                             onClick={() => onCancel()}
@@ -155,5 +163,5 @@ export function TransactionForm({transaction, onCancel}: Props) {
                 </>
             )}
         </Form>
-    )
+    );
 }

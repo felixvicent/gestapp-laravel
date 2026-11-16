@@ -1,17 +1,17 @@
-import {Form} from "@inertiajs/react";
-import {Label} from "@/components/ui/label";
-import {Input} from "@/components/ui/input";
-import InputError from "@/components/input-error";
-import {Button} from "@/components/ui/button";
-import {Tag} from "@/types/tag";
-import {store, update} from "@/routes/tags";
+import { Form } from '@inertiajs/react';
+import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
+import InputError from '@/components/input-error';
+import { Button } from '@/components/ui/button';
+import { Tag } from '@/types/tag';
+import { store, update } from '@/routes/tags';
 
 interface Props {
     onCancel: () => void;
-    tag?: Tag | null
+    tag?: Tag | null;
 }
 
-export function TagForm({ onCancel, tag }: Props){
+export function TagForm({ onCancel, tag }: Props) {
     const isEditing = tag != null;
 
     return (
@@ -19,11 +19,11 @@ export function TagForm({ onCancel, tag }: Props){
             {...(isEditing ? update.form(tag.id) : store.form())}
             className="space-y-6"
             options={{
-                preserveScroll: true
+                preserveScroll: true,
             }}
             onSuccess={() => onCancel()}
         >
-            {({processing, errors}) => (
+            {({ processing, errors }) => (
                 <>
                     <div className="grid gap-2">
                         <Label htmlFor="name">Nome</Label>
@@ -34,7 +34,7 @@ export function TagForm({ onCancel, tag }: Props){
                             name="name"
                             required
                             placeholder="Nome da tag"
-                            defaultValue={tag?.name ?? ""}
+                            defaultValue={tag?.name ?? ''}
                         />
 
                         <InputError className="mt-2" message={errors.name} />
@@ -49,15 +49,19 @@ export function TagForm({ onCancel, tag }: Props){
                             name="color"
                             required
                             placeholder="color da tag"
-                            defaultValue={tag?.color ?? ""}
+                            defaultValue={tag?.color ?? ''}
                             type="color"
                         />
 
                         <InputError className="mt-2" message={errors.name} />
                     </div>
 
-                    <div className="flex items-center gap-4 justify-end">
-                        <Button variant="outline" onClick={() => onCancel()} type="button">
+                    <div className="flex items-center justify-end gap-4">
+                        <Button
+                            variant="outline"
+                            onClick={() => onCancel()}
+                            type="button"
+                        >
                             Cancelar
                         </Button>
                         <Button disabled={processing} type="submit">
@@ -67,5 +71,5 @@ export function TagForm({ onCancel, tag }: Props){
                 </>
             )}
         </Form>
-    )
+    );
 }

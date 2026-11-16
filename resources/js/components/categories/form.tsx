@@ -1,32 +1,36 @@
-import {Form, usePage} from "@inertiajs/react";
-import {store, update} from "@/actions/App/Http/Controllers/CategoryController";
-import {Category} from "@/types/category";
-import {Label} from "@/components/ui/label";
-import {Input} from "@/components/ui/input";
-import InputError from "@/components/input-error";
-import {Textarea} from "@/components/ui/textarea";
-import {Button} from "@/components/ui/button";
-import {Select} from "@/components/_general/select";
-import {SelectOptions} from "@/types/select-options";
+import { Form, usePage } from '@inertiajs/react';
+import {
+    store,
+    update,
+} from '@/actions/App/Http/Controllers/CategoryController';
+import { Category } from '@/types/category';
+import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
+import InputError from '@/components/input-error';
+import { Textarea } from '@/components/ui/textarea';
+import { Button } from '@/components/ui/button';
+import { Select } from '@/components/_general/select';
+import { SelectOptions } from '@/types/select-options';
 
 interface Props {
-    category?: Category | null,
-    onCancel: () => void,
+    category?: Category | null;
+    onCancel: () => void;
 }
-export function CategoryForm({category, onCancel}: Props) {
+export function CategoryForm({ category, onCancel }: Props) {
     const isEditing = category != null;
 
-    const { types } = usePage<{ types: SelectOptions[] }>().props
+    const { types } = usePage<{ types: SelectOptions[] }>().props;
 
     return (
-        <Form {...(isEditing ? update.form(category.id) : store.form())}
-              options={{
-                  preserveScroll: true
-              }}
-              className="space-y-6"
-              onSuccess={() => onCancel()}
+        <Form
+            {...(isEditing ? update.form(category.id) : store.form())}
+            options={{
+                preserveScroll: true,
+            }}
+            className="space-y-6"
+            onSuccess={() => onCancel()}
         >
-            {({processing, errors}) => (
+            {({ processing, errors }) => (
                 <>
                     <div className="grid gap-2">
                         <Label htmlFor="name">Nome</Label>
@@ -40,10 +44,7 @@ export function CategoryForm({category, onCancel}: Props) {
                             defaultValue={category?.name ?? ''}
                         />
 
-                        <InputError
-                            className="mt-2"
-                            message={errors.name}
-                        />
+                        <InputError className="mt-2" message={errors.name} />
                     </div>
                     <div className="grid gap-2">
                         <Label htmlFor="description">Descrição</Label>
@@ -56,20 +57,23 @@ export function CategoryForm({category, onCancel}: Props) {
                             defaultValue={category?.description ?? ''}
                         />
 
-                        <InputError
-                            className="mt-2"
-                            message={errors.name}
-                        />
-
+                        <InputError className="mt-2" message={errors.name} />
                     </div>
                     <div className="grid gap-2">
                         <Label htmlFor="type">Tipo</Label>
 
-                        <Select name="type" value={category?.type} options={types.map(type => ({ label: type.label, value: type.value }))} />
+                        <Select
+                            name="type"
+                            value={category?.type}
+                            options={types.map((type) => ({
+                                label: type.label,
+                                value: type.value,
+                            }))}
+                        />
 
                         <InputError className="mt-2" message={errors.type} />
                     </div>
-                    <div className="flex items-center gap-4 justify-end">
+                    <div className="flex items-center justify-end gap-4">
                         <Button
                             variant="outline"
                             onClick={() => onCancel()}
@@ -84,5 +88,5 @@ export function CategoryForm({category, onCancel}: Props) {
                 </>
             )}
         </Form>
-    )
+    );
 }
