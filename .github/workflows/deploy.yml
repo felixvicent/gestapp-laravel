@@ -93,8 +93,6 @@ jobs:
           username: ${{ secrets.SSH_USERNAME }}
           password: ${{ secrets.SSH_PASSWORD }}
           script: |
-            cd ${{ env.PROJECT_NAME }}
-
             php "$HOME/composer.phar" install --no-dev --optimize-autoloader
 
             php artisan optimize:clear
