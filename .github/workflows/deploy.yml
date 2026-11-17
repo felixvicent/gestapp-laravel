@@ -94,6 +94,16 @@ jobs:
           password: ${{ secrets.SSH_PASSWORD }}
           script: |
 
+            echo "HOME: $HOME"
+            echo "Diretório atual:"
+            pwd
+
+            echo "Conteúdo da HOME:"
+            ls -la "$HOME"
+
+            echo "Procurando composer.json:"
+            find "$HOME" -maxdepth 4 -name composer.json
+
             cd "$HOME/${{ env.PROJECT_NAME }}"
             php "$HOME/composer.phar" install --no-dev --optimize-autoloader
 
