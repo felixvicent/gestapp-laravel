@@ -19,13 +19,14 @@ interface Props {
     onCloseModal: () => void;
 }
 
-interface TransactionFilters {
+export interface TransactionFilters {
     search?: string;
     minValue?: number;
     maxValue?: number;
     categories?: number[];
     beginDate?: string;
     endDate?: string;
+    tags?: number[]
 }
 
 export function TransactionFilterModal({ isOpen, onCloseModal }: Props) {
@@ -176,7 +177,7 @@ export function TransactionFilterModal({ isOpen, onCloseModal }: Props) {
                                             label: tag.name,
                                             value: tag.id,
                                         }))}
-                                        value={filters?.categories ?? []}
+                                        value={filters?.tags ?? []}
                                         name="tags"
                                         render={(item) => (
                                             <Badge

@@ -1,11 +1,11 @@
-import { Head, router } from '@inertiajs/react';
+import {Head, router, usePage} from '@inertiajs/react';
 import { transactions } from '@/routes';
 import { Button } from '@/components/ui/button';
 import { Filter, Plus } from 'lucide-react';
 import { PaginatedData } from '@/types/pagination';
 import { useState } from 'react';
 import { Transaction } from '@/types/transaction';
-import { TransactionFilterModal } from '@/components/transactions/filter-modal';
+import {TransactionFilterModal, TransactionFilters} from '@/components/transactions/filter-modal';
 import { ColumnProps, Table } from '@/components/_general/table';
 import { formatCurrency } from '@/helpers/format';
 import { formatDate } from '@/lib/date';
@@ -17,17 +17,27 @@ import { getContrastColor } from '@/helpers/color';
 import { DialogForm } from '@/components/_general/dialog-form';
 import { TransactionForm } from '@/components/transactions/form';
 
-interface Props {
-    transactions: PaginatedData<Transaction>;
+interface CountTransactionData {
+    total_revenue: number;
+    total_expense: number;
 }
 
-export default function Transactions({ transactions }: Props) {
+interface Props {
+    transactions: PaginatedData<Transaction>;
+    count: CountTransactionData;
+}
+
+export default function Transactions({ transactions, count }: Props) {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
     const [selectedTransactionToUpdate, setSelectedTransactionToUpdate] =
         useState<Transaction | null>(null);
     const [selectedTransactionToDelete, setSelectedTransactionToDelete] =
         useState<Transaction | null>(null);
+
+    const { filters } = usePage<{ filters: TransactionFilters }>().props;
+
+    const isEmpty = transactions.data.length === 0 && !filters;
 
     function handleEditModalOpen(transaction: Transaction) {
         setSelectedTransactionToUpdate(transaction);
@@ -116,21 +126,33 @@ export default function Transactions({ transactions }: Props) {
         <>
             <Head title="Transações" />
             <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
-                {transactions.data.length > 0 && (
-                    <div className="flex items-center justify-end gap-4">
-                        <Button
-                            variant="outline"
-                            onClick={() => setIsFilterModalOpen(true)}
-                        >
-                            <Filter />
-                            Filtros
-                        </Button>
-                        <Button onClick={() => setIsModalOpen(true)}>
-                            <Plus />
-                            Adicionar transação
-                        </Button>
+                <div className="flex items-center justify-between">
+                    <div className="flex gap-4">
+                        <div className="bg-lime-500/20 border-lime-500 border rounded-md px-2 py-1 text-lime-500 text-sm flex flex-col">
+                            <span className="text-xs">Receita</span>
+                            <strong>{formatCurrency(count.total_revenue)}</strong>
+                        </div>
+                        <div className="bg-red-500/20 border-red-500 border rounded-md px-2 py-1 text-red-500 text-sm flex flex-col">
+                            <span className="text-xs">Despesa</span>
+                            <strong>{formatCurrency(count.total_expense)}</strong>
+                        </div><div></div>
                     </div>
-                )}
+                    {!isEmpty && (
+                        <div className="flex items-center justify-end gap-4">
+                            <Button
+                                variant="outline"
+                                onClick={() => setIsFilterModalOpen(true)}
+                            >
+                                <Filter />
+                                Filtros
+                            </Button>
+                            <Button onClick={() => setIsModalOpen(true)}>
+                                <Plus />
+                                Adicionar transação
+                            </Button>
+                        </div>
+                    )}
+                </div>
 
                 <Table
                     columns={COLUMNS}

@@ -91,7 +91,7 @@ export function TransactionForm({ transaction, onCancel }: Props) {
                             required
                             type="date"
                             placeholder="Data da transação"
-                            defaultValue={transaction?.date.toString()}
+                            defaultValue={transaction?.date.toString() ?? new Date().toISOString().split('T')[0]}
                         />
 
                         <InputError className="mt-2" message={errors.date} />

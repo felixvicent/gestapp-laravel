@@ -85,15 +85,14 @@ export function MultiSelect({
                     {selected.length > 0 ? (
                         <div className="flex flex-wrap gap-1">
                             {selectedOptions.map((option) => (
-                                <Button
-                                    size="sm"
-                                    variant="outline"
-                                    type="button"
+                                <div
+                                    key={option.value}
+                                    className="flex items-center gap-1 rounded-md border border-neutral-700 bg-neutral-800 px-2 py-1 text-sm font-medium text-neutral-400 hover:bg-neutral-700"
                                     onClick={() => toggleOption(option.value)}
                                 >
                                     {!!render ? render(option) : option.label}
                                     <X className="size-3" />
-                                </Button>
+                                </div>
                             ))}
                         </div>
                     ) : (
@@ -154,7 +153,7 @@ export function MultiSelect({
                 </Command>
             </PopoverContent>
             {selected.map((sel) => (
-                <input type="hidden" name={`${name}[]`} value={sel} />
+                <input key={sel} type="hidden" name={`${name}[]`} value={sel} />
             ))}
         </Popover>
     );

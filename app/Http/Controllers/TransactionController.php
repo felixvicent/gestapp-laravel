@@ -24,6 +24,7 @@ class TransactionController extends Controller
 
         return Inertia::render('transactions', [
             'transactions' => $this->transactionService->getTransactions($request->user(), $filters),
+            'count' => $this->transactionService->getCountData($request->user(), $filters),
             'categories' => $request->user()->categories()->get()->map(fn ($category) => CategoryDTO::fromModel($category)),
             'tags' => $request->user()->tags()->get()->map(fn ($tag) => TagDTO::fromModel($tag)),
             'filters' => $filters,
