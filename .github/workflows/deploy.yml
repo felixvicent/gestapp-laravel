@@ -16,7 +16,7 @@ jobs:
        # 1 - Clone repository
        # ______________________
       - name: Checkout codigo
-        uses: actions/checkout@v5
+        uses: actions/checkout@v7
 
       #-----------------------
       # 2 - Setup PHP
@@ -35,7 +35,7 @@ jobs:
       # 3 - Setup Node (Vite)
       #-----------------------
       - name: Setup Node
-        uses: actions/setup-node@v5
+        uses: actions/setup-node@v7
         with:
           node-version: lts/*
 
@@ -57,7 +57,7 @@ jobs:
       # 5 - Deploy Backend (Laravel completo)
       #-----------------------
       - name: Deploy Backend
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+        uses: SamKirkland/FTP-Deploy-Action@v4.4.0
         with:
           server: ${{ secrets.FTP_HOST }}
           username: ${{ secrets.FTP_USERNAME }}
@@ -75,7 +75,7 @@ jobs:
       # 6 - Deploy Arquivos públicos
       #-----------------------
       - name: Deploy Public
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+        uses: SamKirkland/FTP-Deploy-Action@v4.4.0
         with:
           server: ${{ secrets.FTP_HOST }}
           username: ${{ secrets.FTP_USERNAME }}
@@ -87,7 +87,7 @@ jobs:
       # 7 - Composer install no servidor
       #-----------------------
       - name: Rodar Composer na HostGator
-        uses: appleboy/ssh-action@v1.0.3
+        uses: appleboy/ssh-action@v1.2.5
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
