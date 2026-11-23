@@ -16,6 +16,7 @@ use App\Http\Requests\Transaction\StoreTransactionRequest;
 use App\Http\Requests\Transaction\UpdateTransactionRequest;
 use App\Models\Transaction;
 use App\Models\User;
+use Carbon\Carbon;
 use Carbon\CarbonImmutable;
 use DateMalformedStringException;
 use Illuminate\Database\Eloquent\Builder;
@@ -41,7 +42,7 @@ class TransactionService
         return $this->applyFilters($user->transactions()->getQuery(), $filters)
             ->select('transactions.*')
             ->with(['category', 'tags'])
-            ->latest()
+            ->latest('date')
             ->paginate(10)
             ->withQueryString()
             ->through(fn ($transaction) => TransactionDTO::fromModel($transaction));
@@ -115,13 +116,20 @@ class TransactionService
     {
         $data = $request->validated();
 
-        DB::transaction(function () use ($request, $data) {
+        $installments = $data['installments'] ?? 1;
+
+        DB::transaction(function () use ($request, $data, $installments) {
             $tags = $data['tags'] ?? [];
 
             unset($data['tags']);
 
-            $transaction = $request->user()->transactions()->create($data);
-            $transaction->tags()->sync($tags);
+
+            for ($i = 0; $i < $installments; $i++) {
+                $date = Carbon::parse($request->date);
+                $data['date'] = $date->addMonths($i);
+                $transaction = $request->user()->transactions()->create($data);
+                $transaction->tags()->sync($tags);
+            }
         });
 
     }

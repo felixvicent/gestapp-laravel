@@ -9,19 +9,22 @@ import { Input } from '@/components/ui/input';
 import InputError from '@/components/input-error';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
-import React from 'react';
+import React, {useState} from 'react';
 import { Transaction } from '@/types/transaction';
 import { Select } from '@/components/_general/select';
 import { MultiSelect } from '@/components/_general/multi-select';
 import { Tag } from '@/types/tag';
 import { Badge } from '@/components/ui/badge';
 import { getContrastColor } from '@/helpers/color';
+import {Checkbox} from "@/components/ui/checkbox";
 
 interface Props {
     transaction?: Transaction | null;
     onCancel: () => void;
 }
 export function TransactionForm({ transaction, onCancel }: Props) {
+    const [isInstallments, setIsInstallments] = useState(false);
+
     const isEditing = transaction != null;
 
     const { categories, tags } = usePage<{
@@ -65,6 +68,35 @@ export function TransactionForm({ transaction, onCancel }: Props) {
                             defaultValue={transaction?.description ?? ''}
                         />
                     </div>
+
+                    {!isEditing && (
+                        <div className="gap-2 flex items-center">
+                            <Checkbox
+                                id="isInstallments"
+                                onCheckedChange={() => setIsInstallments(!isInstallments)}
+                                checked={isInstallments}
+                            />
+                            <Label htmlFor="isInstallments">Parcelado</Label>
+                        </div>
+                    )}
+
+                    {isInstallments && (
+                        <div className="grid gap-2">
+                            <Label htmlFor="installments">Parcelas</Label>
+                            <Input
+                                id="value"
+                                className="mt-1 block w-full"
+                                name="installments"
+                                required
+                                type="number"
+                                placeholder="Quantidade de parcelas"
+                                defaultValue={isEditing ? '' : 1}
+                                step="1"
+                            />
+
+                            <InputError className="mt-2" message={errors.value} />
+                        </div>
+                    )}
 
                     <div className="grid gap-2">
                         <Label htmlFor="value">Valor</Label>

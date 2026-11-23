@@ -30,6 +30,7 @@ class StoreTransactionRequest extends FormRequest
             'category_id' => 'required|exists:categories,id',
             'tags' => 'nullable|array',
             'tags.*' => 'integer|exists:tags,id',
+            'installments' => 'nullable|integer|min:1',
         ];
     }
 
@@ -48,6 +49,8 @@ class StoreTransactionRequest extends FormRequest
             'tags.*.integer' => 'O ID da tag deve ser um número inteiro.',
             'tags.*.distinct' => 'Não é permitido selecionar tags duplicadas.',
             'tags.*.exists' => 'Uma ou mais tags selecionadas são inválidas.',
+            'installments.integer' => 'O número de parcelas deve ser um número inteiro.',
+            'installments.min' => 'O número de parcelas deve ser maior ou igual a 1.',
         ];
     }
 }
